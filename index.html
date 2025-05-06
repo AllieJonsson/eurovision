@@ -9,13 +9,280 @@
         theme: {
           extend: {
             colors: {
-              clifford: '#da373d',
+              main: '#111827',
             },
           },
         },
       };
     </script>
     <script>
+      const entries = [
+        {
+          country: 'Sverige',
+          song: 'Bara bada bastu',
+          artist: 'KAJ',
+          id: 1,
+          code: 'se',
+        },
+        {
+          country: 'Israel',
+          song: 'New Day Will Rise',
+          artist: 'Yuval Raphael',
+          id: 2,
+          code: 'il',
+        },
+        {
+          country: 'Nederländerna',
+          song: 'C’est la vie',
+          artist: 'Claude',
+          id: 3,
+        },
+        {
+          country: 'San Marino',
+          song: 'Tutta l’Italia',
+          artist: 'Gabry Ponte',
+          id: 4,
+          code: 'sm',
+        },
+        {
+          country: 'Spanien',
+          song: 'Esa diva',
+          artist: 'Melody',
+          id: 5,
+          code: 'es',
+        },
+        {
+          country: 'Slovenien',
+          song: 'How Much Time Do We Have Left',
+          artist: 'Klemen',
+          id: 6,
+          code: 'si',
+        },
+        {
+          country: 'Tyskland',
+          song: 'Baller',
+          artist: 'Abor & Tynna',
+          id: 7,
+          code: 'de',
+        },
+        {
+          country: 'Luxemburg',
+          song: 'La poupée monte le son',
+          artist: 'Laura Thorn',
+          id: 8,
+          code: 'lu',
+        },
+        {
+          country: 'Storbritannien',
+          song: 'What The Hell Just Happened?',
+          artist: 'Remember Monday',
+          id: 9,
+          code: 'gb',
+        },
+        {
+          country: 'Frankrike',
+          song: 'Maman',
+          artist: 'Louane',
+          id: 10,
+          code: 'fr',
+        },
+        {
+          country: 'Cypern',
+          song: 'Shh',
+          artist: 'Theo Evan',
+          id: 11,
+          code: 'cy',
+        },
+        {
+          country: 'Armenien',
+          song: 'Survivor',
+          artist: 'Parg',
+          id: 12,
+          code: 'am',
+        },
+        {
+          country: 'Serbien',
+          song: 'Mila',
+          artist: 'Princ',
+          id: 13,
+          code: 'rs',
+        },
+        {
+          country: 'Norge',
+          song: 'Lighter',
+          artist: 'Kyle Alessandro',
+          id: 14,
+          code: 'no',
+        },
+        {
+          country: 'Schweiz',
+          song: 'Voyage',
+          artist: 'Zoë Më',
+          id: 15,
+          code: 'ch',
+        },
+        {
+          country: 'Österrike',
+          song: 'Wasted Love',
+          artist: 'JJ',
+          id: 16,
+          code: 'at',
+        },
+        {
+          country: 'Irland',
+          song: 'Laika Party',
+          artist: 'Emmy',
+          id: 17,
+          code: 'ie',
+        },
+        {
+          country: 'Litauen',
+          song: 'Tavo akys',
+          artist: 'Katarsis',
+          id: 18,
+          code: 'lt',
+        },
+        {
+          country: 'Grekland',
+          song: 'Asteromáta',
+          artist: 'Klavdia',
+          id: 19,
+          code: 'gr',
+        },
+        {
+          country: 'Danmark',
+          song: 'Hallucination',
+          artist: 'Sissal',
+          id: 20,
+          code: 'dk',
+        },
+        {
+          country: 'Italien',
+          song: 'Volevo essere un duro',
+          artist: 'Lucio Corsi',
+          id: 21,
+          code: 'it',
+        },
+        {
+          country: 'Finland',
+          song: 'Ich komme',
+          artist: 'Erika Vikman',
+          id: 22,
+          code: 'fi',
+        },
+        {
+          country: 'Belgien',
+          song: 'Strobe Lights',
+          artist: 'Red Sebastian',
+          id: 23,
+          code: 'be',
+        },
+        {
+          country: 'Montenegro',
+          song: 'Dobrodošli',
+          artist: 'Nina Žižić',
+          id: 24,
+          code: 'me',
+        },
+        {
+          country: 'Lettland',
+          song: 'Bur man laimi',
+          artist: 'Tautumeitas',
+          id: 25,
+          code: 'lv',
+        },
+        {
+          country: 'Albanien',
+          song: 'Zjerm',
+          artist: 'Shkodra Elektronike',
+          id: 26,
+          code: 'al',
+        },
+        {
+          country: 'Portugal',
+          song: 'Deslocado',
+          artist: 'Napa',
+          id: 27,
+          code: 'pt',
+        },
+        {
+          country: 'Polen',
+          song: 'Gaja',
+          artist: 'Justyna Steczkowska',
+          id: 28,
+          code: 'pl',
+        },
+        {
+          country: 'Azerbajdzjan',
+          song: 'Run with U',
+          artist: 'Mamagama',
+          id: 29,
+          code: 'az',
+        },
+        {
+          country: 'Ukraina',
+          song: 'Bird of Pray',
+          artist: 'Ziferblat',
+          id: 30,
+          code: 'ua',
+        },
+        {
+          country: 'Georgien',
+          song: 'Freedom',
+          artist: 'Mariam Shengelia',
+          id: 31,
+          code: 'ge',
+        },
+        {
+          country: 'Island',
+          song: 'Róa',
+          artist: 'Væb',
+          id: 32,
+          code: 'is',
+        },
+        {
+          country: 'Estland',
+          song: 'Espresso Macchiato',
+          artist: 'Tommy Cash',
+          id: 33,
+          code: 'ee',
+        },
+        {
+          country: 'Kroatien',
+          song: 'Poison Cake',
+          artist: 'Marko Bošnjak',
+          id: 34,
+          code: 'hr',
+        },
+        {
+          country: 'Australien',
+          song: 'Milkshake Man',
+          artist: 'Go-Jo',
+          id: 35,
+          code: 'au',
+        },
+        {
+          country: 'Tjeckien',
+          song: 'Kiss Kiss Goodbye',
+          artist: 'Adonxs',
+          id: 36,
+          code: 'cz',
+        },
+        {
+          country: 'Malta',
+          song: 'Serving',
+          artist: 'Miriana Conte',
+          id: 37,
+          code: 'mt',
+        },
+      ];
+      const createEntry = (entry) => {
+        const blueprint = document.getElementById('blueprint');
+        const clone = blueprint.cloneNode();
+        clone.firstChild.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
+        clone.lastChild.textContent = entry.artist + ' - ' + entry.song;
+        document.getElementById('list').appendChild(clone);
+      };
       (function () {
         const id = localStorage.getItem('id') ?? new URL(location.href).searchParams.get('id');
         if (!id) {
@@ -25,8 +292,9 @@
           localStorage.setItem('id', id);
           fetch('/api/bet?id=' + id)
             .then((r) => r.json())
-            .then(() => {
+            .then((data) => {
               document.getElementById('main').classList.remove('hidden');
+              data.map((id) => createEntry(entries.find((e) => e.id === id)));
             })
             .catch(console.error)
             .finally(() => {
@@ -46,8 +314,13 @@
         <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
       </div>
     </article>
-    <article class="flex flex-row justify-center mt-8 hidden" id="main">
-      <div class="flex flex-col items-center" id="list">Bravo!</div>
+    <article class="flex flex-row justify-center mt-8" id="main">
+      <div class="flex flex-col items-center flex-grow text-white" id="list">
+        <div class="h-[60px] w-[80%] flex flex-row" id="blueprint">
+          <div class="w-[95px] h-full bg-no-repeat"></div>
+          <div class="flex flex-grow bg-main text-2xl font-bold items-center p-4"></div>
+        </div>
+      </div>
     </article>
     <div
       id="spinner"
