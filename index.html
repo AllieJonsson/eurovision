@@ -15,8 +15,18 @@
         },
       };
     </script>
+    <script>
+      (function () {
+        fetch('/api/bet')
+          .then((r) => r.json())
+          .then(console.log)
+          .catch(console.error);
+      })();
+    </script>
   </head>
   <body>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
+    <header class="flex flex-row justify-center mt-8">
+      <h1 class="text-3xl font-bold">Uppsalakontorets Eurovisiontippning</h1>
+    </header>
   </body>
 </html>
