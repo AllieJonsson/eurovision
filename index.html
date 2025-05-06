@@ -281,6 +281,8 @@
         const clone = blueprint.cloneNode();
         clone.firstChild.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
         clone.lastChild.textContent = entry.artist + ' - ' + entry.song;
+        clone.id = undefined;
+        clone.classList.remove('hidden');
         document.getElementById('list').appendChild(clone);
       };
       (function () {
@@ -294,7 +296,7 @@
             .then((r) => r.json())
             .then((data) => {
               document.getElementById('main').classList.remove('hidden');
-              data.map((id) => createEntry(entries.find((e) => e.id === id)));
+              data.bet.map((id) => createEntry(entries.find((e) => e.id === id)));
             })
             .catch(console.error)
             .finally(() => {
@@ -316,7 +318,7 @@
     </article>
     <article class="flex flex-row justify-center mt-8" id="main">
       <div class="flex flex-col items-center flex-grow text-white" id="list">
-        <div class="h-[60px] w-[80%] flex flex-row" id="blueprint">
+        <div class="h-[60px] w-[80%] flex flex-row hidden" id="blueprint">
           <div class="w-[95px] h-full bg-no-repeat"></div>
           <div class="flex flex-grow bg-main text-2xl font-bold items-center p-4"></div>
         </div>
