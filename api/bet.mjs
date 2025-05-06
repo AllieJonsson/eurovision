@@ -12,5 +12,6 @@ const redis = new Redis({
 
 export default function handler(request, response) {
   console.log(request);
+  console.log(response);
   return response.status(200).json({ text: 'I am an Edge Function!' });
 }
