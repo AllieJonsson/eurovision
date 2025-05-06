@@ -17,10 +17,22 @@
     </script>
     <script>
       (function () {
-        fetch('/api/bet')
-          .then((r) => r.json())
-          .then(console.log)
-          .catch(console.error);
+        const id = localStorage.getItem('id') ?? new URL(location.href).searchParams.get('id');
+        if (!id) {
+          document.getElementById('tokenGone').classList.remove('hidden');
+          document.getElementById('spinner').classList.add('hidden');
+        } else {
+          localStorage.setItem('id', id);
+          fetch('/api/bet?id=' + id)
+            .then((r) => r.json())
+            .then(() => {
+              document.getElementById('main').classList.remove('hidden');
+            })
+            .catch(console.error)
+            .finally(() => {
+              document.getElementById('spinner').classList.add('hidden');
+            });
+        }
       })();
     </script>
   </head>
@@ -28,5 +40,18 @@
     <header class="flex flex-row justify-center mt-8">
       <h1 class="text-3xl font-bold">Uppsalakontorets Eurovisiontippning</h1>
     </header>
+    <article class="flex flex-row justify-center mt-8 hidden" id="tokenGone">
+      <div class="flex flex-col items-center">
+        <h2 class="text-2xl">Din token är borta :(</h2>
+        <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
+      </div>
+    </article>
+    <article class="flex flex-row justify-center mt-8 hidden" id="main">
+      <div class="flex flex-col items-center" id="list">Bravo!</div>
+    </article>
+    <div
+      id="spinner"
+      class="mx-auto mt-4 size-8 rounded-full border-4 border-black border-l-transparent animate-spin"
+    ></div>
   </body>
 </html>

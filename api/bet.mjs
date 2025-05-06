@@ -12,7 +12,8 @@ const redis = new Redis({
 
 export default function handler(request, response, x, y, z) {
   console.log(request);
-  console.log(response);
-  console.log(x, y, z);
+  // if (request.method === 'GET') {
+  //     redis.get()
+  // }
   return new Response(JSON.stringify({ text: 'Hello world!' }), { status: 200 });
 }
