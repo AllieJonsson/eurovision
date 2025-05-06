@@ -14,5 +14,5 @@ export default function handler(request, response, x, y, z) {
   console.log(request);
   console.log(response);
   console.log(x, y, z);
-  return response.status(200).json({ text: 'I am an Edge Function!' });
+  return new Response(JSON.stringify({ text: 'Hello world!' }), { status: 200 });
 }
