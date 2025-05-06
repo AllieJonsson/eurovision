@@ -19,6 +19,12 @@ export default async function handler(request, response, x, y, z) {
     const cached = await redis.get(`bet.${id}`);
     return new Response(JSON.stringify({ bet: cached ? JSON.parse(cached) : [] }), { status: 200 });
   } else if (request.method === 'POST') {
-    console.log(await request.body.json());
+    try {
+      console.log(await request.json());
+    } catch (e) {}
+    try {
+      console.log(await request.text());
+    } catch (e) {}
+    return new Response('', { status: 200 });
   }
 }
