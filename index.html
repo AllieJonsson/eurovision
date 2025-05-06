@@ -278,7 +278,7 @@
       ];
       const createEntry = (entry) => {
         const blueprint = document.getElementById('blueprint');
-        const clone = blueprint.cloneNode();
+        const clone = blueprint.cloneNode(true);
         clone.firstChild.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
         clone.lastChild.textContent = entry.artist + ' - ' + entry.song;
         clone.id = undefined;
