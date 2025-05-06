@@ -10,8 +10,9 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN || '',
 });
 
-export default function handler(request, response) {
+export default function handler(request, response, x, y, z) {
   console.log(request);
   console.log(response);
+  console.log(x, y, z);
   return response.status(200).json({ text: 'I am an Edge Function!' });
 }
