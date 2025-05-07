@@ -10,6 +10,9 @@
           extend: {
             colors: {
               main: '#111827',
+              gold: '#d4af37',
+              silver: '#c0c0c0',
+              bronze: '#ff5733',
             },
           },
         },
@@ -303,7 +306,13 @@
           const betClone = betBlueprint.cloneNode(true);
           betClone.id = user.name + '_' + entry.country;
           betClone.classList.remove('hidden');
-          betClone.textContent = place + 1 + ` (${user.bets[place].points})`;
+          const placeElem = document.createElement('span');
+          placeElem.textContent = place + 1;
+          const pointsElem = document.createElement('span');
+          pointsElem.classList.add('text-lg');
+          pointsElem.textContent = ` (${user.bets[place].points > 0 ? '+' : ''}${user.bets[place].points})`;
+          betClone.appendChild(placeElem);
+          betClone.appendChild(pointsElem);
           document.getElementById('bets').appendChild(betClone);
         }
       };
@@ -327,17 +336,32 @@
             const numberClone = numberBlueprint.cloneNode(true);
             numberClone.id = 'lead_' + index;
             numberClone.classList.remove('hidden');
+            if (index < 3) {
+              numberClone.classList.add(index === 0 ? 'h-[60px]' : index === 1 ? 'h-[50px]' : 'h-[40px]');
+              numberClone.classList.add(index === 0 ? 'text-3xl' : index === 1 ? 'text-2xl' : 'text-xl');
+              numberClone.classList.add(index === 0 ? 'text-gold' : index === 1 ? 'text-silver' : 'text-bronze');
+            }
             numberClone.textContent = index + 1;
             document.getElementById('leaderboard').appendChild(numberClone);
             const pointsClone = pointsBlueprint.cloneNode(true);
             pointsClone.id = 'lead_points_' + index;
             pointsClone.classList.remove('hidden');
+            if (index < 3) {
+              pointsClone.classList.add(index === 0 ? 'h-[60px]' : index === 1 ? 'h-[50px]' : 'h-[40px]');
+              pointsClone.classList.add(index === 0 ? 'text-3xl' : index === 1 ? 'text-2xl' : 'text-xl');
+              pointsClone.classList.add(index === 0 ? 'text-gold' : index === 1 ? 'text-silver' : 'text-bronze');
+            }
             pointsClone.textContent = user.points;
             document.getElementById('leaderboard').appendChild(pointsClone);
             const userClone = leaderboardUserBlueprint.cloneNode(true);
             userClone.id = 'lead_' + user.name;
             userClone.classList.remove('hidden');
             userClone.textContent = user.name;
+            if (index < 3) {
+              userClone.classList.add(index === 0 ? 'h-[60px]' : index === 1 ? 'h-[50px]' : 'h-[40px]');
+              userClone.classList.add(index === 0 ? 'text-3xl' : index === 1 ? 'text-2xl' : 'text-xl');
+              userClone.classList.add(index === 0 ? 'text-gold' : index === 1 ? 'text-silver' : 'text-bronze');
+            }
             document.getElementById('leaderboard').appendChild(userClone);
           }
         });
@@ -410,7 +434,7 @@
         ></div>
         <div class="h-[60px] w-full bg-no-repeat bg-center bg-cover hidden" id="blueprint"></div>
         <div
-          class="h-[60px] hidden bg-main flex flex-col justify-center text-center hidden text-3xl"
+          class="h-[60px] hidden bg-main flex flex-row justify-center items-center gap-2 hidden text-3xl"
           id="betBlueprint"
         ></div>
       </div>

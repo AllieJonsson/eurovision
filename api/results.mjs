@@ -13,10 +13,15 @@ const redis = new Redis({
 const scoreMap = {
   0: 100,
   1: 70,
-  2: 50,
-  3: 30,
-  4: 15,
-  5: 5,
+  2: 60,
+  3: 50,
+  4: 40,
+  5: 30,
+  6: 25,
+  7: 20,
+  8: 15,
+  9: 10,
+  10: 5,
 };
 
 export default async function handler(request) {
@@ -48,14 +53,16 @@ export default async function handler(request) {
       });
       return [totalPoints, betsWithPoints];
     };
-    const completeUsers = users.map((user, index) => {
-      const [totalPoints, betsWithPoints] = calculatePoints(bets[index]);
-      return {
-        name: user,
-        points: totalPoints,
-        bets: betsWithPoints,
-      };
-    });
+    const completeUsers = users
+      .map((user, index) => {
+        const [totalPoints, betsWithPoints] = calculatePoints(bets[index]);
+        return {
+          name: user,
+          points: totalPoints,
+          bets: betsWithPoints,
+        };
+      })
+      .sort((a, b) => a.points - b.points);
     return new Response(JSON.stringify({ entries: result, users: completeUsers }), { status: 200 });
   }
 }
