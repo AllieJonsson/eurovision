@@ -62,7 +62,7 @@ export default async function handler(request) {
           bets: betsWithPoints,
         };
       })
-      .sort((a, b) => a.points - b.points);
+      .sort((a, b) => b.points - a.points);
     return new Response(JSON.stringify({ entries: result, users: completeUsers }), { status: 200 });
   }
 }
