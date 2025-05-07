@@ -284,7 +284,7 @@
       let currentMoveY = 0;
       let blueprint = null;
       let myOrder = [];
-      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
+      const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
       const getItem = () => {
         const index = Math.max(0, Math.floor((currentMoveY + 30) / 60));
         console.log(index, myOrder.filter((m) => m.country !== currentDragId).length);
