@@ -277,130 +277,113 @@
           code: 'mt',
         },
       ];
-      let currentDragId = null;
-      let startX = 0;
-      let startY = 0;
-      let currentMoveX = 0;
-      let currentMoveY = 0;
+
       let blueprint = null;
-      let myOrder = [];
-      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
-      const getItem = () => {
-        const index = Math.max(0, Math.floor((currentMoveY + 30) / 60));
-        console.log(index, myOrder.filter((m) => m.country !== currentDragId).length);
-        const item = document.getElementById(
-          myOrder.filter((m) => m.country !== currentDragId)[Math.min(index, myOrder.length - 2)].country
-        );
-        return [index, item];
-      };
-      const followMouse = (e) => {
-        if (currentDragId === null) return;
-        currentMoveX = e.pageX - startX;
-        currentMoveY = e.pageY - startY;
-        const currentDrag = document.getElementById(currentDragId);
-        currentDrag.style.transform = `translate(${currentMoveX}px, ${currentMoveY}px)`;
-        const listItem = document.getElementById('list');
-        const [index, item] = getItem();
-        item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', blueprint);
-      };
-      const createEntry = (entry) => {
+      let betBlueprint = null;
+      let resultBlueprint = null;
+      let userBlueprint = null;
+      let numberBlueprint = null;
+      let pointsBlueprint = null;
+      let leaderboardUserBlueprint = null;
+      const createEntry = (entry, result, users) => {
+        const resultClone = resultBlueprint.cloneNode(true);
+        resultClone.id = entry.country + '_result';
+        resultClone.classList.remove('hidden');
+        resultClone.textContent = result;
+        document.getElementById('bets').appendChild(resultClone);
+
         const clone = blueprint.cloneNode(true);
-        clone.firstChild.parentElement.firstElementChild.classList.add(
-          `bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`
-        );
-        clone.firstChild.parentElement.lastElementChild.textContent = entry.artist + ' - ' + entry.song;
+        clone.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
         clone.id = entry.country;
         clone.classList.remove('hidden');
+        document.getElementById('bets').appendChild(clone);
 
-        const node = document.getElementById('list').appendChild(clone);
-        if (isSubmissionLocked) return;
-
-        node.addEventListener('pointerdown', (e) => {
-          e.preventDefault();
-          currentDragId = e.currentTarget.id;
-          startX = e.pageX; //0;
-          startY = e.pageY - e.currentTarget.offsetTop;
-          blueprint.classList.remove('hidden');
-          blueprint.classList.add('invisible');
-          e.currentTarget.classList.add('absolute');
-
-          followMouse(e);
-        });
+        for (const user of users) {
+          const place = user.bets.findIndex((b) => b.id === entry.id);
+          const betClone = betBlueprint.cloneNode(true);
+          betClone.id = user.name + '_' + entry.country;
+          betClone.classList.remove('hidden');
+          betClone.textContent = place + 1 + ` (${user.bets[place].points})`;
+          document.getElementById('bets').appendChild(betClone);
+        }
       };
-      const createEntries = (entries) => {
-        myOrder = structuredClone(entries);
+      const createEntries = (entries, users) => {
         blueprint = document.getElementById('blueprint');
-        entries.map(createEntry);
-        if (isSubmissionLocked) {
-          document.getElementById('submissionLocked').classList.remove('hidden');
+        betBlueprint = document.getElementById('betBlueprint');
+        resultBlueprint = document.getElementById('resultBlueprint');
+        userBlueprint = document.getElementById('userBlueprint');
+        numberBlueprint = document.getElementById('numberBlueprint');
+        pointsBlueprint = document.getElementById('pointsBlueprint');
+        leaderboardUserBlueprint = document.getElementById('leaderboardUserBlueprint');
+        document.getElementById('bets').classList.add(`grid-cols-[40px,95px,repeat(${users.length},minmax(auto,1fr))]`);
+        users.map((user, index) => {
+          const userClone = userBlueprint.cloneNode(true);
+          userClone.id = user.name;
+          userClone.classList.remove('hidden');
+          userClone.textContent = user.name + ` (${user.points})`;
+          document.getElementById('bets').appendChild(userClone);
+
+          {
+            const numberClone = numberBlueprint.cloneNode(true);
+            numberClone.id = 'lead_' + index;
+            numberClone.classList.remove('hidden');
+            numberClone.textContent = index + 1;
+            document.getElementById('leaderboard').appendChild(numberClone);
+            const pointsClone = pointsBlueprint.cloneNode(true);
+            pointsClone.id = 'lead_points_' + index;
+            pointsClone.classList.remove('hidden');
+            pointsClone.textContent = user.points;
+            document.getElementById('leaderboard').appendChild(pointsClone);
+            const userClone = leaderboardUserBlueprint.cloneNode(true);
+            userClone.id = 'lead_' + user.name;
+            userClone.classList.remove('hidden');
+            userClone.textContent = user.name;
+            document.getElementById('leaderboard').appendChild(userClone);
+          }
+        });
+        entries.map((e, index) => createEntry(e, index + 1, users));
+      };
+      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
+      (function () {
+        if (!isSubmissionLocked) {
+          window.location.href = location.pathname;
           return;
         }
-        window.addEventListener('pointermove', followMouse);
-        window.addEventListener('pointerup', (e) => {
-          if (currentDragId === null) return;
-          e.preventDefault();
-          blueprint.classList.add('hidden');
-          blueprint.classList.remove('invisible');
-          const drag = document.getElementById(currentDragId);
-          drag.classList.remove('absolute');
-          drag.style.transform = '';
-          const listItem = document.getElementById('list');
-          const [index, item] = getItem();
-          item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', drag);
-          const elem = myOrder.find((m) => m.country === currentDragId);
-          const prevIndex = myOrder.indexOf(elem);
-          myOrder.splice(prevIndex, 1);
-          myOrder =
-            index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
-          if (!location.href.startsWith('file:///')) {
-            const id = localStorage.getItem('id');
-            if (!id) {
-              document.getElementById('tokenGone').classList.remove('hidden');
-              document.getElementById('main').classList.add('hidden');
-              return;
-            }
-            fetch('/api/bet', {
-              method: 'POST',
-              body: JSON.stringify({ id, bet: myOrder.map((m) => m.id) }),
-            });
-          }
-          currentDragId = null;
-        });
-      };
-      (function () {
-        const id = new URL(location.href).searchParams.get('id') ?? localStorage.getItem('id');
-        if (!id) {
-          document.getElementById('tokenGone').classList.remove('hidden');
-          document.getElementById('spinner').classList.add('hidden');
+        if (location.href.startsWith('file:///')) {
+          setTimeout(() => {
+            createEntries(entries, [
+              {
+                name: 'Alice Jonsson',
+                points: Math.floor(100 * Math.random()),
+                bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+              },
+              {
+                name: 'Alice Jonsson 2',
+                points: Math.floor(100 * Math.random()),
+                bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+              },
+            ]);
+            document.getElementById('main').classList.remove('hidden');
+            document.getElementById('spinner').classList.add('hidden');
+          }, 50);
         } else {
-          localStorage.setItem('id', id);
-          history.pushState(null, '', location.pathname);
-          if (location.href.startsWith('file:///')) {
-            setTimeout(() => {
-              createEntries(entries);
+          fetch('/api/results')
+            .then((r) => r.json())
+            .then((data) => {
               document.getElementById('main').classList.remove('hidden');
+              // {
+              //     users: {name: string, points: number, bets: {id: number, points: number}[]}[],
+              //     entries: number[]
+              // }
+              createEntries(
+                data.entries.map((id) => entries.find((e) => e.id === id)),
+                data.users
+              );
+            })
+            .catch(console.error)
+            .finally(() => {
               document.getElementById('spinner').classList.add('hidden');
-            }, 50);
-          } else {
-            fetch('/api/bet?id=' + id)
-              .then((r) => r.json())
-              .then((data) => {
-                document.getElementById('main').classList.remove('hidden');
-                if (data.bet.length === 0) {
-                  createEntries(entries);
-                  fetch('/api/bet', {
-                    method: 'POST',
-                    body: JSON.stringify({ id, bet: entries.map((m) => m.id) }),
-                  });
-                } else {
-                  createEntries(data.bet.map((id) => entries.find((e) => e.id === id)));
-                }
-              })
-              .catch(console.error)
-              .finally(() => {
-                document.getElementById('spinner').classList.add('hidden');
-              });
-          }
+            });
         }
       })();
     </script>
@@ -415,19 +398,28 @@
         <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
       </div>
     </article>
-    <article class="flex flex-row justify-center mt-8 hidden" id="submissionLocked">
-      <div class="flex flex-col items-center">
-        <h2 class="text-2xl">Tippningen är låst!</h2>
-        <p>Nu väntar vi på resultatet. Spännande!</p>
-        <a class="underline" href="/result">Gå till resultatsidan</a>
+    <article class="flex lg:flex-row flex-col justify-center mt-8 hidden" id="main">
+      <div class="grid flex-grow text-white relative p-4 gap-y-px" id="bets">
+        <div class="flex flex-col justify-center text-center bg-main">#</div>
+        <div class="flex flex-col justify-center text-center bg-main">Land</div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="userBlueprint"></div>
+        <div
+          class="h-[60px] hidden bg-main flex flex-col justify-center text-center hidden text-3xl"
+          id="resultBlueprint"
+        ></div>
+        <div class="h-[60px] w-full bg-no-repeat bg-center bg-cover hidden" id="blueprint"></div>
+        <div
+          class="h-[60px] hidden bg-main flex flex-col justify-center text-center hidden text-3xl"
+          id="betBlueprint"
+        ></div>
       </div>
-    </article>
-    <article class="flex flex-row justify-center mt-8 hidden" id="main">
-      <div class="flex flex-col items-center flex-grow text-white relative" id="list">
-        <div class="h-[60px] w-[80%] flex flex-row border-b-4 border-white hidden" id="blueprint">
-          <div class="w-[95px] h-full bg-no-repeat bg-center bg-cover"></div>
-          <div class="flex flex-grow bg-main text-2xl font-bold items-center p-4"></div>
-        </div>
+      <div class="grid grid-cols-[10%,20%,70%] h-full flex-grow text-white relative p-4 gap-y-px" id="leaderboard">
+        <div class="flex flex-col justify-center text-center bg-main">#</div>
+        <div class="flex flex-col justify-center text-center bg-main">Poäng</div>
+        <div class="flex flex-col justify-center text-center bg-main">Namn</div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="numberBlueprint"></div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="pointsBlueprint"></div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="leaderboardUserBlueprint"></div>
       </div>
     </article>
     <div
