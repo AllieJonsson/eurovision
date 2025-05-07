@@ -343,7 +343,7 @@
         });
         entries.map((e, index) => createEntry(e, index + 1, users));
       };
-      const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
+      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
       const main = () => {
         if (!isSubmissionLocked) {
           window.location.href = location.href.replace('/result', '');
