@@ -346,7 +346,7 @@
       const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
       (function () {
         if (!isSubmissionLocked) {
-          window.location.href = location.pathname;
+          window.location.href = location.href.replace('/result', '');
           return;
         }
         if (location.href.startsWith('file:///')) {
