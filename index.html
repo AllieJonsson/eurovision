@@ -36,6 +36,7 @@
           song: 'C’est la vie',
           artist: 'Claude',
           id: 3,
+          code: 'nl',
         },
         {
           country: 'San Marino',
@@ -276,34 +277,109 @@
           code: 'mt',
         },
       ];
+      let currentDragId = null;
+      let currentMoveX,
+        currentMoveY = 0;
+      let blueprint = null;
+      let myOrder = [];
+      const getItem = () => {
+        const index = Math.min(Math.max(0, Math.floor((currentMoveY + 30) / 60)), myOrder.length - 1);
+        const item = document.getElementById(myOrder.filter((m) => m.country !== currentDragId)[index].country);
+        return [index, item];
+      };
+      const followMouse = (e) => {
+        if (currentDragId === null) return;
+        currentMoveX += e.movementX;
+        currentMoveY += e.movementY;
+        const currentDrag = document.getElementById(currentDragId);
+        currentDrag.style.transform = `translate(${currentMoveX}px, ${currentMoveY}px)`;
+        const listItem = document.getElementById('list');
+        const [index, item] = getItem();
+        item.insertAdjacentElement(index > listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', blueprint);
+      };
       const createEntry = (entry) => {
-        const blueprint = document.getElementById('blueprint');
         const clone = blueprint.cloneNode(true);
         clone.firstChild.parentElement.firstElementChild.classList.add(
           `bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`
         );
         clone.firstChild.parentElement.lastElementChild.textContent = entry.artist + ' - ' + entry.song;
-        clone.id = undefined;
+        clone.id = entry.country;
         clone.classList.remove('hidden');
-        document.getElementById('list').appendChild(clone);
+
+        const node = document.getElementById('list').appendChild(clone);
+        node.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          currentDragId = e.currentTarget.id;
+          currentMoveX = 0;
+          currentMoveY = e.currentTarget.offsetTop;
+          blueprint.classList.remove('hidden');
+          blueprint.classList.add('invisible');
+          e.currentTarget.classList.add('absolute');
+
+          followMouse({ movementX: 0, movementY: 0 });
+        });
+      };
+      const createEntries = (entries) => {
+        myOrder = structuredClone(entries);
+        blueprint = document.getElementById('blueprint');
+        entries.map(createEntry);
+        window.addEventListener('pointermove', followMouse);
+        window.addEventListener('pointerup', (e) => {
+          if (currentDragId === null) return;
+          e.preventDefault();
+          blueprint.classList.add('hidden');
+          blueprint.classList.remove('invisible');
+          const drag = document.getElementById(currentDragId);
+          drag.classList.remove('absolute');
+          drag.style.transform = '';
+          const listItem = document.getElementById('list');
+          const [index, item] = getItem();
+          item.insertAdjacentElement(index > listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', drag);
+          const elem = myOrder.find((m) => m.country === currentDragId);
+          const prevIndex = myOrder.indexOf(elem);
+          myOrder.splice(prevIndex, 1);
+          myOrder = [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
+          if (!location.href.startsWith('file:///')) {
+            const id = localStorage.getItem('id');
+            if (!id) {
+              document.getElementById('tokenGone').classList.remove('hidden');
+              document.getElementById('main').classList.add('hidden');
+              return;
+            }
+            fetch('/api/bet', {
+              method: 'POST',
+              body: JSON.stringify({ id, bet: myOrder.map((m) => m.id) }),
+            });
+          }
+          currentDragId = null;
+        });
       };
       (function () {
-        const id = localStorage.getItem('id') ?? new URL(location.href).searchParams.get('id');
+        const id = new URL(location.href).searchParams.get('id') ?? localStorage.getItem('id');
         if (!id) {
           document.getElementById('tokenGone').classList.remove('hidden');
           document.getElementById('spinner').classList.add('hidden');
         } else {
           localStorage.setItem('id', id);
-          fetch('/api/bet?id=' + id)
-            .then((r) => r.json())
-            .then((data) => {
+          history.pushState(null, '', location.pathname);
+          if (location.href.startsWith('file:///')) {
+            setTimeout(() => {
+              createEntries(entries);
               document.getElementById('main').classList.remove('hidden');
-              data.bet.map((id) => createEntry(entries.find((e) => e.id === id)));
-            })
-            .catch(console.error)
-            .finally(() => {
               document.getElementById('spinner').classList.add('hidden');
-            });
+            }, 50);
+          } else {
+            fetch('/api/bet?id=' + id)
+              .then((r) => r.json())
+              .then((data) => {
+                document.getElementById('main').classList.remove('hidden');
+                createEntries(data.bet.map((id) => entries.find((e) => e.id === id)));
+              })
+              .catch(console.error)
+              .finally(() => {
+                document.getElementById('spinner').classList.add('hidden');
+              });
+          }
         }
       })();
     </script>
@@ -318,10 +394,10 @@
         <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
       </div>
     </article>
-    <article class="flex flex-row justify-center mt-8" id="main">
-      <div class="flex flex-col items-center flex-grow text-white" id="list">
-        <div class="h-[60px] w-[80%] flex flex-row hidden" id="blueprint">
-          <div class="w-[95px] h-full bg-no-repeat"></div>
+    <article class="flex flex-row justify-center mt-8 hidden" id="main">
+      <div class="flex flex-col items-center flex-grow text-white relative" id="list">
+        <div class="h-[60px] w-[80%] flex flex-row border-b-4 border-white hidden" id="blueprint">
+          <div class="w-[95px] h-full bg-no-repeat bg-center bg-cover"></div>
           <div class="flex flex-grow bg-main text-2xl font-bold items-center p-4"></div>
         </div>
       </div>
