@@ -367,7 +367,7 @@
           currentDragId = null;
         });
       };
-      (function () {
+      const main = () => {
         const id = new URL(location.href).searchParams.get('id') ?? localStorage.getItem('id');
         if (!id) {
           document.getElementById('tokenGone').classList.remove('hidden');
@@ -376,11 +376,9 @@
           localStorage.setItem('id', id);
           history.pushState(null, '', location.pathname);
           if (location.href.startsWith('file:///')) {
-            setTimeout(() => {
-              createEntries(entries);
-              document.getElementById('main').classList.remove('hidden');
-              document.getElementById('spinner').classList.add('hidden');
-            }, 50);
+            createEntries(entries);
+            document.getElementById('main').classList.remove('hidden');
+            document.getElementById('spinner').classList.add('hidden');
           } else {
             fetch('/api/bet?id=' + id)
               .then((r) => r.json())
@@ -402,6 +400,9 @@
               });
           }
         }
+      };
+      (function () {
+        addEventListener('DOMContentLoaded', main);
       })();
     </script>
   </head>

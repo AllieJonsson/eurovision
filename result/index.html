@@ -344,28 +344,26 @@
         entries.map((e, index) => createEntry(e, index + 1, users));
       };
       const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
-      (function () {
+      const main = () => {
         if (!isSubmissionLocked) {
           window.location.href = location.href.replace('/result', '');
           return;
         }
         if (location.href.startsWith('file:///')) {
-          setTimeout(() => {
-            createEntries(entries, [
-              {
-                name: 'Alice Jonsson',
-                points: Math.floor(100 * Math.random()),
-                bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
-              },
-              {
-                name: 'Alice Jonsson 2',
-                points: Math.floor(100 * Math.random()),
-                bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
-              },
-            ]);
-            document.getElementById('main').classList.remove('hidden');
-            document.getElementById('spinner').classList.add('hidden');
-          }, 50);
+          createEntries(entries, [
+            {
+              name: 'Alice Jonsson',
+              points: Math.floor(100 * Math.random()),
+              bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+            },
+            {
+              name: 'Alice Jonsson 2',
+              points: Math.floor(100 * Math.random()),
+              bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+            },
+          ]);
+          document.getElementById('main').classList.remove('hidden');
+          document.getElementById('spinner').classList.add('hidden');
         } else {
           fetch('/api/results')
             .then((r) => r.json())
@@ -385,6 +383,9 @@
               document.getElementById('spinner').classList.add('hidden');
             });
         }
+      };
+      (function () {
+        addEventListener('DOMContentLoaded', main);
       })();
     </script>
   </head>
