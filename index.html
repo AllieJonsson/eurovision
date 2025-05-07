@@ -278,16 +278,13 @@
         },
       ];
       let currentDragId = null;
-      let startX = 0;
       let startY = 0;
-      let currentMoveX = 0;
       let currentMoveY = 0;
       let blueprint = null;
       let myOrder = [];
-      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
+      const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
       const getItem = () => {
         const index = Math.max(0, Math.floor((currentMoveY + 30) / 60));
-        console.log(index, myOrder.filter((m) => m.country !== currentDragId).length);
         const item = document.getElementById(
           myOrder.filter((m) => m.country !== currentDragId)[Math.min(index, myOrder.length - 2)].country
         );
@@ -295,30 +292,41 @@
       };
       const followMouse = (e) => {
         if (currentDragId === null) return;
-        currentMoveX = e.pageX - startX;
         currentMoveY = e.pageY - startY;
         const currentDrag = document.getElementById(currentDragId);
-        currentDrag.style.transform = `translate(${currentMoveX}px, ${currentMoveY}px)`;
+        currentDrag.style.transform = `translateY(${currentMoveY}px)`;
         const listItem = document.getElementById('list');
         const [index, item] = getItem();
         item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', blueprint);
       };
-      const createEntry = (entry) => {
+      const createEntry = (entry, index) => {
         const clone = blueprint.cloneNode(true);
-        clone.firstChild.parentElement.firstElementChild.classList.add(
+        clone.firstChild.parentElement.firstElementChild.textContent = index + 1;
+        clone.firstChild.parentElement.firstElementChild.nextElementSibling.classList.add(
           `bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`
         );
-        clone.firstChild.parentElement.lastElementChild.textContent = entry.artist + ' - ' + entry.song;
+        clone.firstChild.parentElement.lastElementChild.previousElementSibling.textContent =
+          entry.artist + ' - ' + entry.song;
         clone.id = entry.country;
         clone.classList.remove('hidden');
 
         const node = document.getElementById('list').appendChild(clone);
         if (isSubmissionLocked) return;
 
-        node.addEventListener('pointerdown', (e) => {
+        clone.firstChild.parentElement.lastElementChild.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          currentDragId = e.currentTarget.parentElement.id;
+          startY = e.touches[0].pageY - e.currentTarget.parentElement.offsetTop;
+          blueprint.classList.remove('hidden');
+          blueprint.classList.add('invisible');
+          e.currentTarget.parentElement.classList.add('absolute');
+
+          console.log(e);
+          followMouse(e.touches[0]);
+        });
+        node.addEventListener('mousedown', (e) => {
           e.preventDefault();
           currentDragId = e.currentTarget.id;
-          startX = e.pageX; //0;
           startY = e.pageY - e.currentTarget.offsetTop;
           blueprint.classList.remove('hidden');
           blueprint.classList.add('invisible');
@@ -352,6 +360,14 @@
           myOrder.splice(prevIndex, 1);
           myOrder =
             index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
+
+          let rankIndex = 0;
+          for (const child of listItem.children) {
+            if (child.id !== 'blueprint') {
+              rankIndex++;
+              child.firstElementChild.textContent = rankIndex;
+            }
+          }
           if (!location.href.startsWith('file:///')) {
             const id = localStorage.getItem('id');
             if (!id) {
@@ -417,7 +433,7 @@
       </div>
     </article>
     <article class="flex flex-row justify-center mt-8 hidden" id="submissionLocked">
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center text-center">
         <h2 class="text-2xl">Tippningen är låst!</h2>
         <p>Nu väntar vi på resultatet. Spännande!</p>
         <a class="underline" href="/result">Gå till resultatsidan</a>
@@ -425,9 +441,19 @@
     </article>
     <article class="flex flex-row justify-center mt-8 hidden" id="main">
       <div class="flex flex-col items-center flex-grow text-white relative" id="list">
-        <div class="h-[60px] w-[80%] flex flex-row border-b-4 border-white hidden" id="blueprint">
-          <div class="w-[95px] h-full bg-no-repeat bg-center bg-cover"></div>
-          <div class="flex flex-grow bg-main text-2xl font-bold items-center p-4"></div>
+        <div class="h-[60px] w-[98%] md:w-[80%] flex flex-row border-y-2 border-white hidden" id="blueprint">
+          <div
+            class="flex flex-col bg-main text-sm md:text-lg lg:text-2xl flex-shrink-0 justify-center text-center w-6 md:w-8 lg:w-10"
+          >
+            1
+          </div>
+          <div class="w-[95px] h-full bg-no-repeat bg-center bg-cover flex-shrink-0"></div>
+          <div class="flex flex-grow bg-main text-sm md:text-lg lg:text-2xl font-bold items-center px-2 lg:p-4"></div>
+          <div class="flex flex-col bg-main justify-between items-center w-8 pr-2 py-5 lg:hidden flex-shrink-0">
+            <div class="border-b-2 border-white/60 w-full"></div>
+            <div class="border-b-2 border-white/60 w-full"></div>
+            <div class="border-b-2 border-white/60 w-full"></div>
+          </div>
         </div>
       </div>
     </article>
