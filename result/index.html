@@ -425,6 +425,9 @@
               //     entries: number[]
               // }
               if (data.entries.length > 0) areResultsIn = true;
+              if (!areResultsIn) {
+                document.getElementById('waitingForResults').classList.remove('hidden');
+              }
               const a = [];
               createEntries(
                 areResultsIn
@@ -458,6 +461,9 @@
         <h2 class="text-2xl">Din token är borta :(</h2>
         <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
       </div>
+    </article>
+    <article class="hidden mt-4 text-xl flex flex-col items-center justify-center" id="waitingForResults">
+      Vi väntar på resultatet, spännande!
     </article>
     <article class="flex lg:flex-row flex-col justify-center mt-8" id="main">
       <div
