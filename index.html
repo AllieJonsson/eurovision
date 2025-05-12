@@ -394,12 +394,15 @@
           if (location.href.startsWith('file:///')) {
             createEntries(entries);
             document.getElementById('main').classList.remove('hidden');
+            document.getElementById('username').classList.remove('hidden');
             document.getElementById('spinner').classList.add('hidden');
           } else {
             fetch('/api/bet?id=' + id)
               .then((r) => r.json())
               .then((data) => {
                 document.getElementById('main').classList.remove('hidden');
+                document.getElementById('username').classList.remove('hidden');
+                document.getElementById("username").textContent = `Hej ${data.user}!`;
                 if (data.bet.length === 0) {
                   createEntries(entries);
                   fetch('/api/bet', {
@@ -423,19 +426,20 @@
     </script>
   </head>
   <body>
-    <header class="flex flex-row justify-center mt-8">
-      <h1 class="text-3xl font-bold">Uppsalakontorets Eurovisiontippning</h1>
+    <header class="flex flex-col items-center justify-center mt-8">
+      <h1 class="text-3xl font-bold">Uppsalakontorets Eurovisiongissning</h1>
+      <h2 class="text-2xl font-bold hidden my-4" id="username">Hej Alice!</h2>
     </header>
     <article class="flex flex-row justify-center mt-8 hidden" id="tokenGone">
       <div class="flex flex-col items-center">
-        <h2 class="text-2xl">Din token är borta :(</h2>
-        <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
+        <h3 class="text-2xl">Aj då, nu tappades ditt id bort :(</h2>
+        <p>Gå in på länken i din inbjudningsmejlet för att hämta din gissning.</p>
       </div>
     </article>
     <article class="flex flex-row justify-center mt-8 hidden" id="submissionLocked">
       <div class="flex flex-col items-center text-center">
-        <h2 class="text-2xl">Tippningen är låst!</h2>
-        <p>Nu väntar vi på resultatet. Spännande!</p>
+        <h3 class="text-2xl">Gissningen är låst</h2>
+        <p>Vem vinner? Kika in resultatsidan, spännande!</p>
         <a class="underline" href="/result">Gå till resultatsidan</a>
       </div>
     </article>
@@ -445,7 +449,7 @@
           <div
             class="flex flex-col bg-main text-sm md:text-lg lg:text-2xl flex-shrink-0 justify-center text-center w-6 md:w-8 lg:w-10"
           >
-            1
+            0
           </div>
           <div class="w-[95px] h-full bg-no-repeat bg-center bg-cover flex-shrink-0"></div>
           <div class="flex flex-grow bg-main text-sm md:text-lg lg:text-2xl font-bold items-center px-2 lg:p-4"></div>

@@ -17,7 +17,8 @@ export default async function handler(request) {
     const id = url.searchParams.get('id');
     if (!id) return new Response(JSON.stringify({ error: 'Missing param: id' }), { status: 400 });
     const cached = await redis.get(`bet.${id}`);
-    return new Response(JSON.stringify({ bet: cached ?? [] }), { status: 200 });
+    const user = await redis.get(`user.${id}`);
+    return new Response(JSON.stringify({ bet: cached ?? [], user }), { status: 200 });
   } else if (request.method === 'POST') {
     const data = await request.json();
     console.log(data);

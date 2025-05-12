@@ -288,6 +288,7 @@
       let numberBlueprint = null;
       let pointsBlueprint = null;
       let leaderboardUserBlueprint = null;
+      let areResultsIn = false;
       const createEntry = (entry, result, users) => {
         const resultClone = resultBlueprint.cloneNode(true);
         resultClone.id = entry.country + '_result';
@@ -296,23 +297,31 @@
         document.getElementById('bets').appendChild(resultClone);
 
         const clone = blueprint.cloneNode(true);
-        clone.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
+        if (areResultsIn) {
+          clone.classList.add(`bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`);
+        } else {
+          clone.classList.add('bg-main');
+        }
         clone.id = entry.country;
         clone.classList.remove('hidden');
         document.getElementById('bets').appendChild(clone);
 
         for (const user of users) {
-          const place = user.bets.findIndex((b) => b.id === entry.id);
+          const bet = user.bets[result - 1];
           const betClone = betBlueprint.cloneNode(true);
-          betClone.id = user.name + '_' + entry.country;
+          betClone.id = user.name + '_' + result;
           betClone.classList.remove('hidden');
           const placeElem = document.createElement('span');
-          placeElem.textContent = place + 1;
-          const pointsElem = document.createElement('span');
-          pointsElem.classList.add('text-lg');
-          pointsElem.textContent = ` (${user.bets[place].points > 0 ? '+' : ''}${user.bets[place].points})`;
+          placeElem.className = `bg-[url(https://flagcdn.com/h60/${
+            entries.find((e) => e.id === bet.id).code
+          }.png)] h-[60px] w-[95px] bg-no-repeat bg-center bg-cover `;
           betClone.appendChild(placeElem);
-          betClone.appendChild(pointsElem);
+          if (areResultsIn) {
+            const pointsElem = document.createElement('span');
+            pointsElem.classList.add('text-lg');
+            pointsElem.textContent = ` (${bet.points > 0 ? '+' : ''}${bet.points})`;
+            betClone.appendChild(pointsElem);
+          }
           document.getElementById('bets').appendChild(betClone);
         }
       };
@@ -332,7 +341,8 @@
           userClone.textContent = user.name + ` (${user.points})`;
           document.getElementById('bets').appendChild(userClone);
 
-          {
+          if (areResultsIn) {
+            document.getElementById('leaderboard').classList.remove('hidden');
             const numberClone = numberBlueprint.cloneNode(true);
             numberClone.id = 'lead_' + index;
             numberClone.classList.remove('hidden');
@@ -343,6 +353,7 @@
             }
             numberClone.textContent = index + 1;
             document.getElementById('leaderboard').appendChild(numberClone);
+
             const pointsClone = pointsBlueprint.cloneNode(true);
             pointsClone.id = 'lead_points_' + index;
             pointsClone.classList.remove('hidden');
@@ -352,6 +363,7 @@
               pointsClone.classList.add(index === 0 ? 'text-gold' : index === 1 ? 'text-silver' : 'text-bronze');
             }
             pointsClone.textContent = user.points;
+
             document.getElementById('leaderboard').appendChild(pointsClone);
             const userClone = leaderboardUserBlueprint.cloneNode(true);
             userClone.id = 'lead_' + user.name;
@@ -367,6 +379,13 @@
         });
         entries.map((e, index) => createEntry(e, index + 1, users));
       };
+      const mean = (values) => {
+        let sum = 0;
+        for (const v of values) {
+          sum += v;
+        }
+        return sum / values.length;
+      };
       const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
       const main = () => {
         if (!isSubmissionLocked) {
@@ -374,18 +393,26 @@
           return;
         }
         if (location.href.startsWith('file:///')) {
-          createEntries(entries, [
+          const users = [
             {
               name: 'Alice Jonsson',
-              points: Math.floor(100 * Math.random()),
-              bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+              points: 0,
+              bets: entries.map((e) => ({ id: e.id, points: 0 })).sort(() => Math.random() * 2 - 1),
             },
             {
               name: 'Alice Jonsson 2',
-              points: Math.floor(100 * Math.random()),
-              bets: entries.map((e) => ({ id: e.id, points: Math.floor(100 * Math.random()) })),
+              points: 0,
+              bets: entries.map((e) => ({ id: e.id, points: 0 })).sort(() => Math.random() * 2 - 1),
             },
-          ]);
+          ];
+          createEntries(
+            entries.sort(
+              (a, b) =>
+                mean(users.map((u) => u.bets.findIndex((bet) => bet.id === a.id))) -
+                mean(users.map((u) => u.bets.findIndex((bet) => bet.id === b.id)))
+            ),
+            users
+          );
           document.getElementById('main').classList.remove('hidden');
           document.getElementById('spinner').classList.add('hidden');
         } else {
@@ -397,8 +424,16 @@
               //     users: {name: string, points: number, bets: {id: number, points: number}[]}[],
               //     entries: number[]
               // }
+              if (data.entries.length > 0) areResultsIn = true;
+              const a = [];
               createEntries(
-                data.entries.map((id) => entries.find((e) => e.id === id)),
+                areResultsIn
+                  ? data.entries.map((id) => entries.find((e) => e.id === id))
+                  : entries.sort(
+                      (a, b) =>
+                        mean(data.users.map((u) => u.bets.findIndex((bet) => bet.id === b.id))) -
+                        mean(data.users.map((u) => u.bets.findIndex((bet) => bet.id === a.id)))
+                    ),
                 data.users
               );
             })
@@ -408,6 +443,7 @@
             });
         }
       };
+
       (function () {
         addEventListener('DOMContentLoaded', main);
       })();
@@ -423,10 +459,21 @@
         <p>Gå in på länken i din kalenderinbjudan för att förnya den.</p>
       </div>
     </article>
-    <article class="flex lg:flex-row flex-col justify-center mt-8 hidden" id="main">
+    <article class="flex lg:flex-row flex-col justify-center mt-8" id="main">
+      <div
+        class="grid grid-cols-[10%,20%,70%] h-full flex-grow text-white relative p-4 gap-y-px hidden"
+        id="leaderboard"
+      >
+        <div class="flex flex-col justify-center text-center bg-main">#</div>
+        <div class="flex flex-col justify-center text-center bg-main">Poäng</div>
+        <div class="flex flex-col justify-center text-center bg-main">Namn</div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="numberBlueprint"></div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="pointsBlueprint"></div>
+        <div class="flex flex-col justify-center text-center bg-main hidden" id="leaderboardUserBlueprint"></div>
+      </div>
       <div class="grid flex-grow text-white relative p-4 gap-y-px" id="bets">
         <div class="flex flex-col justify-center text-center bg-main">#</div>
-        <div class="flex flex-col justify-center text-center bg-main">Land</div>
+        <div class="flex flex-col justify-center text-center bg-main">Vinnare</div>
         <div class="flex flex-col justify-center text-center bg-main hidden" id="userBlueprint"></div>
         <div
           class="h-[60px] hidden bg-main flex flex-col justify-center text-center hidden text-3xl"
@@ -437,14 +484,6 @@
           class="h-[60px] hidden bg-main flex flex-row justify-center items-center gap-2 hidden text-3xl"
           id="betBlueprint"
         ></div>
-      </div>
-      <div class="grid grid-cols-[10%,20%,70%] h-full flex-grow text-white relative p-4 gap-y-px" id="leaderboard">
-        <div class="flex flex-col justify-center text-center bg-main">#</div>
-        <div class="flex flex-col justify-center text-center bg-main">Poäng</div>
-        <div class="flex flex-col justify-center text-center bg-main">Namn</div>
-        <div class="flex flex-col justify-center text-center bg-main hidden" id="numberBlueprint"></div>
-        <div class="flex flex-col justify-center text-center bg-main hidden" id="pointsBlueprint"></div>
-        <div class="flex flex-col justify-center text-center bg-main hidden" id="leaderboardUserBlueprint"></div>
       </div>
     </article>
     <div
