@@ -304,7 +304,7 @@
         myOrder.splice(prevIndex, 1);
         myOrder =
           index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
-        console.log(myOrder);
+          
         for (let i = 0; i < entries.length; i++) {
           const countryElem = document.getElementById(myOrder[i].country);
           if (countryElem.id !== currentDrag.id) {
@@ -357,21 +357,30 @@
       const createEntries = (entries) => {
         myOrder = structuredClone(entries);
         blueprint = document.getElementById('blueprint');
+        const observer = new MutationObserver(function(mutations) {
+          for (let i = entries.length - 1; i >= 0; i--) {
+            const elem = document.getElementById(entries[i].country);
+            const rect = elem.getBoundingClientRect();
+            elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
+            elem.classList.add("absolute");
+          }
+          observer.disconnect();
+        });
+        observer.observe(document.getElementById("list"), {attributes: false, childList: true, characterData: false, subtree: true});
         entries.map(createEntry);
         if (isSubmissionLocked) {
           document.getElementById('submissionLocked').classList.remove('hidden');
           return;
         }
-        window.addEventListener("load", () => {
-          for (let i = entries.length - 1; i >= 0; i--) {
-            const elem = document.getElementById(entries[i].country);
-            const rect = elem.getBoundingClientRect();
-            // console.log(rect);
-            elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
-            console.log(elem.style.transform);
-            elem.classList.add("absolute");
-          }
-        })
+
+        // setTimeout(() => {
+        //   for (let i = entries.length - 1; i >= 0; i--) {
+        //     const elem = document.getElementById(entries[i].country);
+        //     const rect = elem.getBoundingClientRect();
+        //     elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
+        //     elem.classList.add("absolute");
+        //   }
+        // }, 100);
         window.addEventListener('pointermove', followMouse);
         window.addEventListener('pointerup', (e) => {
           if (currentDragId === null) return;
@@ -381,13 +390,8 @@
           const drag = document.getElementById(currentDragId);
           drag.classList.remove("z-50");
           drag.classList.add("duration-100");
-          // drag.classList.remove('absolute');
-          // drag.style.transform = '';
           const listItem = document.getElementById('list');
           const [index, item] = getItem();
-          // item.style.top = `${(index >= listItem.childElementCount - 1 ? index : index + 1) * 60}px`;
-          console.log(item, index);
-          // item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', drag);
           const elem = myOrder.find((m) => m.country === currentDragId);
           const prevIndex = myOrder.indexOf(elem);
           myOrder.splice(prevIndex, 1);
