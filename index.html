@@ -283,7 +283,8 @@
       let currentMoveY = 0;
       let blueprint = null;
       let myOrder = [];
-      const isSubmissionLocked = new Date() > new Date('2025-05-17T19:00:00Z');
+      let startIndex = 0;
+      const isSubmissionLocked = new Date() > new Date('2025-05-17T21:00:00Z');
       const getItem = () => {
         const index = Math.max(0, Math.floor((currentMoveY + 30) / 60));
         const item = document.getElementById(
@@ -295,10 +296,24 @@
         if (currentDragId === null) return;
         currentMoveY = e.pageY - startY;
         const currentDrag = document.getElementById(currentDragId);
-        currentDrag.style.transform = `translateY(${currentMoveY}px)`;
+        currentDrag.style.top = `${currentMoveY}px`;
         const listItem = document.getElementById('list');
         const [index, item] = getItem();
-        item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', blueprint);
+        const elem = myOrder.find((m) => m.country === currentDragId);
+        const prevIndex = myOrder.indexOf(elem);
+        myOrder.splice(prevIndex, 1);
+        myOrder =
+          index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
+        console.log(myOrder);
+        for (let i = 0; i < entries.length; i++) {
+          const countryElem = document.getElementById(myOrder[i].country);
+          if (countryElem.id !== currentDrag.id) {
+            countryElem.style.top = `${i * 60}px`;
+          }
+          countryElem.firstElementChild.textContent = i + 1;
+        }
+        // item.style.top = `${(index >= listItem.childElementCount - 1 ? index : index + 1) * 60}px`;
+        // item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', blueprint);
       };
       const createEntry = (entry, index) => {
         const clone = blueprint.cloneNode(true);
@@ -320,9 +335,10 @@
           startY = e.touches[0].pageY - e.currentTarget.parentElement.offsetTop;
           blueprint.classList.remove('hidden');
           blueprint.classList.add('invisible');
-          e.currentTarget.parentElement.classList.add('absolute');
+          e.currentTarget.parentElement.classList.remove('duration-100');
+          e.currentTarget.parentElement.classList.add("z-50")
+          startIndex = Number(e.currentTarget.parentElement.firstElementChild.textContent) - 1;
 
-          console.log(e);
           followMouse(e.touches[0]);
         });
         node.addEventListener('mousedown', (e) => {
@@ -331,8 +347,10 @@
           startY = e.pageY - e.currentTarget.offsetTop;
           blueprint.classList.remove('hidden');
           blueprint.classList.add('invisible');
-          e.currentTarget.classList.add('absolute');
-
+          e.currentTarget.classList.remove('duration-100');
+          e.currentTarget.classList.add("z-50")
+          startIndex = Number(e.currentTarget.firstElementChild.textContent) - 1;
+          
           followMouse(e);
         });
       };
@@ -344,6 +362,16 @@
           document.getElementById('submissionLocked').classList.remove('hidden');
           return;
         }
+        window.addEventListener("load", () => {
+          for (let i = entries.length - 1; i >= 0; i--) {
+            const elem = document.getElementById(entries[i].country);
+            const rect = elem.getBoundingClientRect();
+            // console.log(rect);
+            elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
+            console.log(elem.style.transform);
+            elem.classList.add("absolute");
+          }
+        })
         window.addEventListener('pointermove', followMouse);
         window.addEventListener('pointerup', (e) => {
           if (currentDragId === null) return;
@@ -351,24 +379,27 @@
           blueprint.classList.add('hidden');
           blueprint.classList.remove('invisible');
           const drag = document.getElementById(currentDragId);
-          drag.classList.remove('absolute');
-          drag.style.transform = '';
+          drag.classList.remove("z-50");
+          drag.classList.add("duration-100");
+          // drag.classList.remove('absolute');
+          // drag.style.transform = '';
           const listItem = document.getElementById('list');
           const [index, item] = getItem();
-          item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', drag);
+          // item.style.top = `${(index >= listItem.childElementCount - 1 ? index : index + 1) * 60}px`;
+          console.log(item, index);
+          // item.insertAdjacentElement(index >= listItem.childElementCount - 1 ? 'afterend' : 'beforebegin', drag);
           const elem = myOrder.find((m) => m.country === currentDragId);
           const prevIndex = myOrder.indexOf(elem);
           myOrder.splice(prevIndex, 1);
           myOrder =
             index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
-
-          let rankIndex = 0;
-          for (const child of listItem.children) {
-            if (child.id !== 'blueprint') {
-              rankIndex++;
-              child.firstElementChild.textContent = rankIndex;
-            }
+            
+          for (let i = 0; i <= index; i++) {
+            const countryElem = document.getElementById(myOrder[i].country);
+            countryElem.style.top = `${i * 60}px`;
+            countryElem.firstElementChild.textContent = i + 1;
           }
+
           if (!location.href.startsWith('file:///')) {
             const id = localStorage.getItem('id');
             if (!id) {
@@ -428,8 +459,8 @@
   </head>
   <body>
     <header class="flex flex-col items-center justify-center mt-8">
-      <h1 class="text-3xl font-bold">Uppsalakontorets Eurovision<span class="line-through text-xl">tippning</span>gissning</h1>
-      <h2 class="text-2xl font-bold hidden my-4" id="username">Hej Alice!</h2>
+      <h1 class="text-3xl font-bold text-center">Uppsalakontorets Eurovision<span class="line-through text-xl">tippning</span>gissning</h1>
+      <h2 class="text-2xl font-bold hidden my-4 text-center" id="username">Hej Alice!</h2>
     </header>
     <article class="flex flex-row justify-center mt-8 hidden" id="tokenGone">
       <div class="flex flex-col items-center">
@@ -446,7 +477,7 @@
     </article>
     <article class="flex flex-row justify-center mt-8 hidden" id="main">
       <div class="flex flex-col items-center flex-grow text-white relative" id="list">
-        <div class="h-[60px] w-[98%] md:w-[80%] flex flex-row border-y-2 border-white hidden" id="blueprint">
+        <div class="h-[60px] w-[98%] md:w-[80%] flex flex-row border-y-2 border-white hidden duration-100" id="blueprint">
           <div
             class="flex flex-col bg-main text-sm md:text-lg lg:text-2xl flex-shrink-0 justify-center text-center w-6 md:w-8 lg:w-10"
           >

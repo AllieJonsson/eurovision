@@ -386,7 +386,7 @@
         }
         return sum / values.length;
       };
-      const isSubmissionLocked = new Date() > new Date('2025-04-17T19:00:00Z');
+      const isSubmissionLocked = new Date() > new Date('2025-05-17T21:00:00Z');
       const main = () => {
         if (!isSubmissionLocked) {
           window.location.href = location.href.replace('/result', '');
@@ -414,16 +414,15 @@
             users
           );
           document.getElementById('main').classList.remove('hidden');
+          document.getElementById('username').classList.remove('hidden');
           document.getElementById('spinner').classList.add('hidden');
         } else {
           fetch('/api/results')
             .then((r) => r.json())
             .then((data) => {
               document.getElementById('main').classList.remove('hidden');
-              // {
-              //     users: {name: string, points: number, bets: {id: number, points: number}[]}[],
-              //     entries: number[]
-              // }
+              document.getElementById('username').classList.remove('hidden');
+              document.getElementById('username').textContent = `Hej ${data.user}!`;
               if (data.entries.length > 0) areResultsIn = true;
               if (!areResultsIn) {
                 document.getElementById('waitingForResults').classList.remove('hidden');
@@ -453,10 +452,11 @@
     </script>
   </head>
   <body>
-    <header class="flex flex-row justify-center mt-8">
-      <h1 class="text-3xl font-bold">
+    <header class="flex flex-col items-center justify-center mt-8">
+      <h1 class="text-3xl font-bold text-center">
         Uppsalakontorets Eurovision<span class="line-through text-xl">tippning</span>gissning
       </h1>
+      <h2 class="text-2xl font-bold hidden my-4 text-center" id="username">Hej Alice!</h2>
     </header>
     <article class="flex flex-row justify-center mt-8 hidden" id="tokenGone">
       <div class="flex flex-col items-center">
@@ -467,7 +467,7 @@
     <article class="hidden mt-4 text-xl flex flex-col items-center justify-center" id="waitingForResults">
       Vi väntar på resultatet, spännande!
     </article>
-    <article class="flex lg:flex-row flex-col justify-center mt-8" id="main">
+    <article class="flex lg:flex-row flex-col justify-center mt-4" id="main">
       <div
         class="grid grid-cols-[10%,20%,70%] h-full flex-grow text-white relative p-4 gap-y-px hidden"
         id="leaderboard"
