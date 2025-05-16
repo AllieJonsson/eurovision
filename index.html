@@ -286,7 +286,7 @@
       let startIndex = 0;
       const isSubmissionLocked = new Date() > new Date('2025-05-17T21:00:00Z');
       const getItem = () => {
-        const index = Math.max(0, Math.floor((currentMoveY + 30) / 60));
+        const index = Math.min(Math.max(0, Math.floor((currentMoveY + 30) / 60)), entries.length - 1);
         const item = document.getElementById(
           myOrder.filter((m) => m.country !== currentDragId)[Math.min(index, myOrder.length - 2)].country
         );
@@ -358,12 +358,14 @@
         myOrder = structuredClone(entries);
         blueprint = document.getElementById('blueprint');
         const observer = new MutationObserver(function(mutations) {
+          const main = document.getElementById("main");
           for (let i = entries.length - 1; i >= 0; i--) {
             const elem = document.getElementById(entries[i].country);
             const rect = elem.getBoundingClientRect();
-            elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
+            elem.style.top = `${elem.offsetTop}px`;
             elem.classList.add("absolute");
           }
+          main.style.height = `${main.clientHeight}px`;
           observer.disconnect();
         });
         observer.observe(document.getElementById("list"), {attributes: false, childList: true, characterData: false, subtree: true});
@@ -373,14 +375,6 @@
           return;
         }
 
-        // setTimeout(() => {
-        //   for (let i = entries.length - 1; i >= 0; i--) {
-        //     const elem = document.getElementById(entries[i].country);
-        //     const rect = elem.getBoundingClientRect();
-        //     elem.style.top = `${rect.y - elem.parentElement.offsetTop}px`;
-        //     elem.classList.add("absolute");
-        //   }
-        // }, 100);
         window.addEventListener('pointermove', followMouse);
         window.addEventListener('pointerup', (e) => {
           if (currentDragId === null) return;
@@ -397,12 +391,14 @@
           myOrder.splice(prevIndex, 1);
           myOrder =
             index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
-            
-          for (let i = 0; i <= index; i++) {
+          
+          for (let i = 0; i < index; i++) {
             const countryElem = document.getElementById(myOrder[i].country);
             countryElem.style.top = `${i * 60}px`;
             countryElem.firstElementChild.textContent = i + 1;
           }
+          drag.style.top = `${index * 60}px`;
+          drag.firstElementChild.textContent = index + 1;
 
           if (!location.href.startsWith('file:///')) {
             const id = localStorage.getItem('id');
@@ -479,7 +475,7 @@
         <a class="underline" href="/result">Gå till resultatsidan</a>
       </div>
     </article>
-    <article class="flex flex-row justify-center mt-8 hidden" id="main">
+    <article class="flex flex-row justify-center my-8 hidden" id="main">
       <div class="flex flex-col items-center flex-grow text-white relative" id="list">
         <div class="h-[60px] w-[98%] md:w-[80%] flex flex-row border-y-2 border-white hidden duration-100" id="blueprint">
           <div
