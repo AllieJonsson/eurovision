@@ -319,7 +319,8 @@
           if (areResultsIn) {
             const pointsElem = document.createElement('span');
             pointsElem.classList.add('text-lg');
-            pointsElem.textContent = ` (${bet.points > 0 ? '+' : ''}${bet.points})`;
+            pointsElem.classList.afd('w-[50px]');
+            pointsElem.textContent = `${bet.points > 0 ? '+' : ''}${bet.points}`;
             betClone.appendChild(pointsElem);
           }
           document.getElementById('bets').appendChild(betClone);
