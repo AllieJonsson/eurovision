@@ -12,16 +12,13 @@ const redis = new Redis({
 
 const scoreMap = {
   0: 100,
-  1: 70,
+  1: 80,
   2: 60,
   3: 50,
   4: 40,
   5: 30,
-  6: 25,
-  7: 20,
-  8: 15,
-  9: 10,
-  10: 5,
+  6: 20,
+  7: 10,
 };
 
 export default async function handler(request) {
