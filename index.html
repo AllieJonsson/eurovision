@@ -284,7 +284,7 @@
       let blueprint = null;
       let myOrder = [];
       let startIndex = 0;
-      const isSubmissionLocked = new Date() > new Date('2025-05-17T21:00:00Z');
+      const isSubmissionLocked = false; // new Date() > new Date('2025-05-17T21:00:00Z');
       const getItem = () => {
         const index = Math.min(Math.max(0, Math.floor((currentMoveY + 30) / 60)), entries.length - 1);
         const item = document.getElementById(
