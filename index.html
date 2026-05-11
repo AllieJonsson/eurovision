@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="min-h-[100vh]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              main: '#111827',
+              silver: '#c0c0c0',
+              bronze: '#FF7F47',
+            },
+          },
+        },
+      };
+    </script>
+    <script src="./entries.js"></script>
+    <script src="bet.js"></script>
+    <script src="result.js"></script>
+    <script>
+      const main = () => {
+        const bet = document.getElementById('bet');
+        const result = document.getElementById('result');
+        bet.onclick = (e) => {
+          bet.setAttribute('aria-selected', 'true');
+          result.setAttribute('aria-selected', 'false');
+          showBet();
+          hideResult();
+        }
+        result.onclick = (e) => {
+          bet.setAttribute('aria-selected', 'false');
+          result.setAttribute('aria-selected', 'true');
+          showResult();
+          hideBet();
+        }
+
+        showBet();
+      }
+      (function () {
+        addEventListener('DOMContentLoaded', main);
+      })();
+    </script>
+  </head>
+  <body class="bg-gradient-to-br from-white via-[#eef7ff] to-[#aaf4ff] text-slate-900 mx-[2vw] md:mx-[10vw] lg:mx-[20vw]">
+    <header class="flex flex-col items-center justify-center mt-8 gap-4">
+      <span class="text-base md:text-xl tracking-wider font-extrabold bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 bg-clip-text text-transparent uppercase">Uppsalakontorets</span>
+      <marquee class=" -mx-[2vw] md:-mx-[10vw] lg:-mx-[20vw]">
+        <h1 class="text-2xl md:text-4xl lg:text-[60px] xl:text-[80px] lg:-mt-2 lg:mb-4 pb-2 lg:pb-12 lg:pt-4 font-extrabold tracking-wide bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 bg-clip-text text-transparent">
+          Eurovisiontippning 2026
+        </h1>
+      </marquee>
+      <div class="border border-slate-300 rounded-full flex flex-row gap-4 py-1 px-2 bg-white items-center text-xl font-bold">
+        <button id="bet" aria-selected="true" class="bg-gradient-to-r from-white to-white hover:from-indigo-500/30 hover:to-violet-500/30 aria-selected:from-indigo-500 aria-selected:to-violet-500 duration-300 transition-all rounded-full py-3 px-6" href="">Tippa</button>
+        <button id="result" aria-selected="false" class="bg-gradient-to-r from-white to-white hover:from-indigo-500/30 hover:to-violet-500/30 aria-selected:from-indigo-500 aria-selected:to-violet-500 duration-300 transition-all rounded-full py-3 px-6">Resultat</button>
+      </div>
+    </header>
+    <article class="flex flex-col items-center justify-center mt-4 gap-4">
+      <div class="w-full lg:w-auto text-center rounded-xl lg:rounded-full border border-slate-200 py-2 px-2 lg:px-6 gap-1 lg:gap-6 flex flex-col lg:flex-row flex-grow bg-white">
+        <h2 class="text-lg lg:text-xl p-2 font-bold tracking-wide bg-gradient-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent uppercase">2025 års prispall:</h2>
+        <div class="flex flex-row gap-1 lg:gap-3 items-center">
+          <span class="p-2 rounded-full bg-amber-300 text-black size-8 items-center justify-center flex font-extrabold text-base lg:text-xl">1</span>
+          <span class="text-amber-300 text-base lg:text-xl font-bold">David S</span>
+        </div>
+        <div class="flex flex-row gap-1 lg:gap-3 items-center">
+          <span class="p-2 rounded-full bg-slate-300 text-black size-8 items-center justify-center flex font-extrabold text-base lg:text-xl">2</span>
+          <span class="text-slate-300 text-base lg:text-xl font-bold">Ulrika</span>
+        </div>
+        <div class="flex flex-row gap-1 lg:gap-3 items-center">
+          <span class="p-2 rounded-full bg-orange-400 text-black size-8 items-center justify-center flex font-extrabold text-base lg:text-xl">3</span>
+          <span class="text-orange-400 text-base lg:text-xl font-bold">Anna</span>
+        </div>
+      </div>
+      <div class="rounded-xl border border-slate-300 p-4 gap-2 flex flex-col bg-white w-full">
+        <h3 class="text-lg lg:text-xl font-bold hidden" id="username">Hej Alice!</h3>
+        <p class="text-sm lg:text-xl hidden" id="tutorial">Dra och släpp bidragen i listan för att ändra ordningen. Närmast vinner!</p>
+      </div>
+    </article>
+    <article class="flex flex-row justify-center mt-8 hidden" id="tokenGone">
+      <div class="flex flex-col items-center">
+        <h3 class="text-2xl">Aj då, nu tappades ditt id bort :(</h2>
+        <p>Gå in på länken i din inbjudningsmejlet för att hämta din gissning.</p>
+      </div>
+    </article>
+    <article class="flex flex-row justify-center mt-8 hidden" id="submissionLocked">
+      <div class="flex flex-col items-center text-center">
+        <h3 class="text-2xl">Gissningen är låst</h2>
+      </div>
+    </article>
+    <article class="flex flex-row justify-center my-8 hidden" id="main">
+      <div class="flex flex-col items-center flex-grow bg-white border border-slate-300 rounded-xl relative shadow-xl shadow-slate-200/70 py-4 gap-2" id="list">
+        <div class="cursor-grab w-[calc(100%-0.5rem)] mx-2 lg:w-[calc(100%-4rem)] lg:mx-16 flex-grow border border-slate-200/80 flex flex-row hidden duration-100 rounded-lg justify-between p-2 gap-1 lg:gap-4 shadow-sm hover:shadow-md bg-white" id="blueprint">
+          <div class="flex flex-col lg:flex-row gap-1 lg:gap-4 justify-center">
+            <div
+              class="flex flex-col text-sm md:text-lg lg:text-2xl flex-shrink-0 justify-center text-center w-6 md:w-8 lg:w-10"
+            >
+              <span class="bg-slate-300 rounded-lg text-slate-900 text-base font-semibold">
+                0
+              </span>
+            </div>
+            <div class="flex-shrink-0 flex items-center flex-row">
+              <div class="w-full aspect-[1.75/1] lg:w-[40px] lg:h-[25px] bg-no-repeat bg-center bg-cover rounded-md "></div>
+            </div>
+          </div>
+          <div class="flex flex-col lg:flex-row flex-grow items-center justify-center">
+            <span class="text-sm md:text-lg lg:text-xl font-bold lg:mr-2 overflow-hidden text-ellipsis text-center"></span>
+            <span class="text-sm md:text-lg lg:text-xl lg:mt-0 overflow-hidden text-ellipsis lg:before:content-['_-_'] text-center"></span>
+          </div>  
+          <a class="flex flex-shrink-0 my-auto items-center justify-center h-6 lg:h-8 w-8 lg:w-10 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-pink-500 text-white shadow-sm transition hover:scale-105" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noreferrer">
+            ▷
+          </a>
+          <div class="flex flex-col justify-between items-center w-8 px-2 -mx-2 h-5 my-auto lg:hidden flex-shrink-0">
+            <div class="border-b-2 border-slate-900/60 w-full"></div>
+            <div class="border-b-2 border-slate-900/60 w-full"></div>
+            <div class="border-b-2 border-slate-900/60 w-full"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+    
+    <article
+      class="hidden flex flex-col text-slate-900 border border-slate-200 p-4 mt-4 bg-white rounded-lg"
+      id="leaderboard"
+    >
+      <div class="flex flex-row justify-between">
+        <div class="flex flex-col gap-2 justify-center items-center font-bold mt-4" id="leaderboard2">
+          <span
+            class="w-16 text-3xl aspect-square flex justify-center items-center rounded-full bg-slate-300 text-slate-600"
+          >
+            2
+          </span>
+          <span>Alice Jonsson</span>
+          <span class="text-xl text-violet-700">38</span>
+          <span>poäng</span>
+        </div>
+        <div class="flex flex-col gap-2 items-center font-bold" id="leaderboard1">
+          <span
+            class="w-16 text-3xl aspect-square flex justify-center items-center rounded-full bg-amber-300 text-amber-600"
+          >
+            1
+          </span>
+          <span>Alice Jonsson</span>
+          <span class="text-xl text-violet-700">38</span>
+          <span>poäng</span>
+        </div>
+        <div class="flex flex-col gap-2 items-center font-bold mt-10" id="leaderboard3">
+          <span
+            class="w-16 text-3xl aspect-square flex justify-center items-center rounded-full bg-orange-400 text-orange-700"
+          >
+            3
+          </span>
+          <span>Alice Jonsson</span>
+          <span class="text-xl text-violet-700">38</span>
+          <span>poäng</span>
+        </div>
+      </div>
+      <div class="flex flex-col mt-6 border-t border-slate-500/50 pt-6">
+        <div class="flex flex-row gap-4 items-center font-bold hidden" id="leaderboardEntryBlueprint">
+          <span>4. Alice Jonsson</span>
+          <span class="text-xl text-violet-700">38</span>
+          <span>poäng</span>
+        </div>
+      </div>
+    </article>
+    <article class="flex flex-col gap-2 mt-4 text-slate-900 gap-2 mb-6" id="bets">
+      <div
+        class="grid grid-cols-[1fr,auto,1fr,1fr] gap-2 p-4 shadow-md bg-white rounded-lg hidden"
+        id="placementBlueprint"
+      >
+        <span class="text-lg font-bold text-indigo-500 col-span-2">Placering 1</span>
+        <div class="flex flex-row gap-2 justify-end col-span-2">
+          <div class="w-[40px] h-[25px] bg-no-repeat bg-center bg-cover rounded-md"></div>
+          <span class="font-bold">Österrike</span>
+        </div>
+        <div class="contents font-semibold hidden" id="answerBlueprint">
+          <span class="">Alice</span>
+          <div class="w-[40px] h-[25px] bg-no-repeat bg-center bg-cover rounded-md"></div>
+          <span class="">Österrike</span>
+          <div class="flex items-center justify-end">
+            <span class="text-center rounded-full p-1 w-8">12 p</span>
+          </div>
+        </div>
+      </div>
+    </article>
+    <div
+      id="spinner"
+      class="mx-auto mt-4 size-8 rounded-full border-4 border-black border-l-transparent animate-spin"
+    ></div>
+  </body>
+</html>
