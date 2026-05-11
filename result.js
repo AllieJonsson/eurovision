@@ -17,6 +17,7 @@ const createResultEntry = (entry, result, users) => {
       entry.country;
   } else {
     placementClone.firstElementChild.nextElementSibling.firstElementChild.classList.add('bg-white');
+    placementClone.firstElementChild.nextElementSibling.firstElementChild.classList.remove('shadow-md');
     placementClone.firstElementChild.nextElementSibling.firstElementChild.nextElementSibling.textContent = '';
   }
   document.getElementById('bets').appendChild(placementClone);
