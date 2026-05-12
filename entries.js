@@ -145,7 +145,7 @@ const entries = [
     artist: 'Akylas',
     id: 19,
     code: 'gr',
-    youtube: 'https://www.youtube.com/watch?v=VlwIKCFYQyw',
+    youtube: 'https://www.youtube.com/watch?v=VlwIKCFYQyw&t=25',
   },
   {
     country: 'Danmark',
