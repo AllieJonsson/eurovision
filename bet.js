@@ -11,7 +11,7 @@ const isSubmissionLocked = new Date() > new Date('2026-05-16T21:00:00Z');
 const getItem = () => {
   let accum = 16;
   let index = 0;
-  for (; index < entries.length; index++) {
+  for (; index < entries.length - 1; index++) {
     const countryElem = document.getElementById(myOrder[index].country);
     accum += countryElem.clientHeight + 9;
     if (accum >= currentMoveY + countryElem.clientHeight / 2) break;
