@@ -6,6 +6,7 @@ const entries = [
     id: 1,
     code: 'se',
     youtube: 'https://www.youtube.com/watch?v=W7AZN_me8eA',
+    active: true,
   },
   {
     country: 'Israel',
@@ -14,36 +15,41 @@ const entries = [
     id: 2,
     code: 'il',
     youtube: 'https://www.youtube.com/watch?v=j2uPlJndByI',
+    active: true,
   },
-  /*{
-          country: 'Nederländerna',
-          song: 'C’est la vie',
-          artist: 'Claude',
-          id: 3,
-          code: 'nl',
-        },*/
-  // {
-  //   country: 'San Marino',
-  //   song: 'Superstar',
-  //   artist: 'Senhit',
-  //   id: 4,
-  //   code: 'sm',
-  //   youtube: 'https://www.youtube.com/watch?v=tC3eHYO38do',
-  // },
-  /*{
-          country: 'Spanien',
-          song: 'Esa diva',
-          artist: 'Melody',
-          id: 5,
-          code: 'es',
-        },*/
-  // {
-  //   country: 'Slovenien',
-  //   song: 'How Much Time Do We Have Left',
-  //   artist: 'Klemen',
-  //   id: 6,
-  //   code: 'si',
-  // },
+  {
+    country: 'Nederländerna',
+    song: '???',
+    artist: '???',
+    id: 3,
+    code: 'nl',
+    active: false,
+  },
+  {
+    country: 'San Marino',
+    song: 'Superstar',
+    artist: 'Senhit',
+    id: 4,
+    code: 'sm',
+    youtube: 'https://www.youtube.com/watch?v=tC3eHYO38do',
+    active: false,
+  },
+  {
+    country: 'Spanien',
+    song: '???',
+    artist: '???',
+    id: 5,
+    code: 'es',
+    active: false,
+  },
+  {
+    country: 'Slovenien',
+    song: '???',
+    artist: '???',
+    id: 6,
+    code: 'si',
+    active: false,
+  },
   {
     country: 'Tyskland',
     song: 'Fire',
@@ -51,6 +57,7 @@ const entries = [
     id: 7,
     code: 'de',
     youtube: 'https://www.youtube.com/watch?v=8zjFGH4_Te8',
+    active: true,
   },
   {
     country: 'Luxemburg',
@@ -59,6 +66,7 @@ const entries = [
     id: 8,
     code: 'lu',
     youtube: 'https://www.youtube.com/watch?v=4WA162bl1Fo',
+    active: true,
   },
   {
     country: 'Storbritannien',
@@ -67,6 +75,7 @@ const entries = [
     id: 9,
     code: 'gb',
     youtube: 'https://www.youtube.com/watch?v=8XR2RvfZ-68',
+    active: true,
   },
   {
     country: 'Frankrike',
@@ -75,6 +84,7 @@ const entries = [
     id: 10,
     code: 'fr',
     youtube: 'https://www.youtube.com/watch?v=f1RDzzLzFBs',
+    active: true,
   },
   {
     country: 'Cypern',
@@ -83,6 +93,7 @@ const entries = [
     id: 11,
     code: 'cy',
     youtube: 'https://www.youtube.com/watch?v=TzSs51BiQrE',
+    active: true,
   },
   {
     country: 'Armenien',
@@ -91,6 +102,7 @@ const entries = [
     id: 12,
     code: 'am',
     youtube: 'https://www.youtube.com/watch?v=5EXoK-lgocw',
+    active: true,
   },
   {
     country: 'Serbien',
@@ -99,6 +111,7 @@ const entries = [
     id: 13,
     code: 'rs',
     youtube: 'https://www.youtube.com/watch?v=931yYfZH2F8',
+    active: true,
   },
   {
     country: 'Norge',
@@ -107,6 +120,7 @@ const entries = [
     id: 14,
     code: 'no',
     youtube: 'https://www.youtube.com/watch?v=MasllzWk_bQ',
+    active: true,
   },
   {
     country: 'Schweiz',
@@ -115,6 +129,7 @@ const entries = [
     id: 15,
     code: 'ch',
     youtube: 'https://www.youtube.com/watch?v=PfpYGAzW5dM',
+    active: true,
   },
   {
     country: 'Österrike',
@@ -123,14 +138,16 @@ const entries = [
     id: 16,
     code: 'at',
     youtube: 'https://www.youtube.com/watch?v=IPvJbGy5_o0',
+    active: true,
   },
-  // {
-  //   country: 'Irland',
-  //   song: 'Laika Party',
-  //   artist: 'Emmy',
-  //   id: 17,
-  //   code: 'ie',
-  // },
+  {
+    country: 'Irland',
+    song: '???',
+    artist: '???',
+    id: 17,
+    code: 'ie',
+    active: false,
+  },
   {
     country: 'Litauen',
     song: 'Sólo quiero más',
@@ -138,6 +155,7 @@ const entries = [
     id: 18,
     code: 'lt',
     youtube: 'https://www.youtube.com/watch?v=mPZMHqSsoeo',
+    active: true,
   },
   {
     country: 'Grekland',
@@ -146,6 +164,7 @@ const entries = [
     id: 19,
     code: 'gr',
     youtube: 'https://www.youtube.com/watch?v=VlwIKCFYQyw&t=25',
+    active: true,
   },
   {
     country: 'Danmark',
@@ -154,6 +173,7 @@ const entries = [
     id: 20,
     code: 'dk',
     youtube: 'https://www.youtube.com/watch?v=vKCsNbrt5yI',
+    active: true,
   },
   {
     country: 'Italien',
@@ -162,6 +182,7 @@ const entries = [
     id: 21,
     code: 'it',
     youtube: 'https://www.youtube.com/watch?v=kA7pS6kaTpg',
+    active: true,
   },
   {
     country: 'Finland',
@@ -170,6 +191,7 @@ const entries = [
     id: 22,
     code: 'fi',
     youtube: 'https://www.youtube.com/watch?v=GS91CAAddZA',
+    active: true,
   },
   {
     country: 'Belgien',
@@ -178,15 +200,17 @@ const entries = [
     id: 23,
     code: 'be',
     youtube: 'https://www.youtube.com/watch?v=9sfI4g6DWTU',
+    active: true,
   },
-  // {
-  //   country: 'Montenegro',
-  //   song: 'Nova zora',
-  //   artist: 'Tamara Živković',
-  //   id: 24,
-  //   code: 'me',
-  //   youtube: 'https://www.youtube.com/watch?v=6TfmkUXeKf0',
-  // },
+  {
+    country: 'Montenegro',
+    song: 'Nova zora',
+    artist: 'Tamara Živković',
+    id: 24,
+    code: 'me',
+    youtube: 'https://www.youtube.com/watch?v=6TfmkUXeKf0',
+    active: false,
+  },
   {
     country: 'Lettland',
     song: 'Ēnā',
@@ -194,6 +218,7 @@ const entries = [
     id: 25,
     code: 'lv',
     youtube: 'https://www.youtube.com/watch?v=ylj-kHKEFMY',
+    active: true,
   },
   {
     country: 'Albanien',
@@ -202,15 +227,17 @@ const entries = [
     id: 26,
     code: 'al',
     youtube: 'https://www.youtube.com/watch?v=rZuF1aDDxKE',
+    active: true,
   },
-  // {
-  //   country: 'Portugal',
-  //   song: 'Rosa',
-  //   artist: 'Bandidos do Cante',
-  //   id: 27,
-  //   code: 'pt',
-  //   youtube: 'https://www.youtube.com/watch?v=8emG9PghYXg',
-  // },
+  {
+    country: 'Portugal',
+    song: 'Rosa',
+    artist: 'Bandidos do Cante',
+    id: 27,
+    code: 'pt',
+    youtube: 'https://www.youtube.com/watch?v=8emG9PghYXg',
+    active: false,
+  },
   {
     country: 'Polen',
     song: 'Pray',
@@ -218,6 +245,7 @@ const entries = [
     id: 28,
     code: 'pl',
     youtube: 'https://www.youtube.com/watch?v=bWgdnuww4eY',
+    active: true,
   },
   {
     country: 'Azerbajdzjan',
@@ -226,6 +254,7 @@ const entries = [
     id: 29,
     code: 'az',
     youtube: 'https://www.youtube.com/watch?v=iMDBPe25JhM',
+    active: true,
   },
   {
     country: 'Ukraina',
@@ -234,30 +263,34 @@ const entries = [
     id: 30,
     code: 'ua',
     youtube: 'https://www.youtube.com/watch?v=qxEeWgjbxx0',
+    active: true,
   },
-  // {
-  //   country: 'Georgien',
-  //   song: 'On Replay',
-  //   artist: 'Bzikebi',
-  //   id: 31,
-  //   code: 'ge',
-  //   youtube: 'https://www.youtube.com/watch?v=coh-lygCINY',
-  // },
-  /*{
-          country: 'Island',
-          song: 'Róa',
-          artist: 'Væb',
-          id: 32,
-          code: 'is',
-        },*/
-  // {
-  //   country: 'Estland',
-  //   song: 'Too Epic To Be True',
-  //   artist: 'Vanilla Ninja',
-  //   id: 33,
-  //   code: 'ee',
-  //   youtube: 'https://www.youtube.com/watch?v=pf-oPWrkXFw',
-  // },
+  {
+    country: 'Georgien',
+    song: 'On Replay',
+    artist: 'Bzikebi',
+    id: 31,
+    code: 'ge',
+    youtube: 'https://www.youtube.com/watch?v=coh-lygCINY',
+    active: false,
+  },
+  {
+    country: 'Island',
+    song: '???',
+    artist: '???',
+    id: 32,
+    code: 'is',
+    active: false,
+  },
+  {
+    country: 'Estland',
+    song: 'Too Epic To Be True',
+    artist: 'Vanilla Ninja',
+    id: 33,
+    code: 'ee',
+    youtube: 'https://www.youtube.com/watch?v=pf-oPWrkXFw',
+    active: false,
+  },
   {
     country: 'Kroatien',
     song: 'Andromeda',
@@ -265,6 +298,7 @@ const entries = [
     id: 34,
     code: 'hr',
     youtube: 'https://www.youtube.com/watch?v=5JXpBZgiHkY',
+    active: true,
   },
   {
     country: 'Australien',
@@ -273,6 +307,7 @@ const entries = [
     id: 35,
     code: 'au',
     youtube: 'https://www.youtube.com/watch?v=KsFY11nOQDo',
+    active: true,
   },
   {
     country: 'Tjeckien',
@@ -281,6 +316,7 @@ const entries = [
     id: 36,
     code: 'cz',
     youtube: 'https://www.youtube.com/watch?v=6ea25aRGpLo',
+    active: true,
   },
   {
     country: 'Malta',
@@ -289,6 +325,7 @@ const entries = [
     id: 37,
     code: 'mt',
     youtube: 'https://www.youtube.com/watch?v=YA7Ku_P59Dk',
+    active: true,
   },
   {
     country: 'Moldavien',
@@ -297,6 +334,7 @@ const entries = [
     id: 38,
     code: 'md',
     youtube: 'https://www.youtube.com/watch?v=k340WWX6zHk',
+    active: true,
   },
   {
     country: 'Rumänien',
@@ -305,6 +343,7 @@ const entries = [
     id: 39,
     code: 'ro',
     youtube: 'https://www.youtube.com/watch?v=f2byUc4L9wo',
+    active: true,
   },
   {
     country: 'Bulgarien',
@@ -313,5 +352,6 @@ const entries = [
     id: 40,
     code: 'bg',
     youtube: 'https://www.youtube.com/watch?v=_pkC9J6BPFY',
+    active: true,
   },
 ];

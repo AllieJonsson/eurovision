@@ -60,7 +60,7 @@ const createResultEntry = (entry, result, users) => {
     placementClone.appendChild(answerClone);
   }
 };
-const createResultEntries = (entries, users) => {
+const createResultEntries = (entriesToCreate, users) => {
   placementBlueprint = document.getElementById('placementBlueprint');
   answerBlueprint = document.getElementById('answerBlueprint');
   leaderboardEntryBlueprint = document.getElementById('leaderboardEntryBlueprint');
@@ -83,7 +83,7 @@ const createResultEntries = (entries, users) => {
     });
   }
   if (areResultsIn) {
-    entries.map((e, index) => createResultEntry(e, index + 1, users));
+    entriesToCreate.map((e, index) => createResultEntry(e, index + 1, users));
   } else {
     for (let i = 1; i <= 25; i++) {
       createResultEntry(null, i, users);
@@ -104,46 +104,47 @@ const hideResult = () => {
 
 const showResult = () => {
   if (location.href.startsWith('file:///')) {
+    const filtered = entries.filter((e) => e.active);
     const users = [
       {
         name: 'Alice Jonsson',
         points: 16,
-        bets: entries
+        bets: filtered
           .map((e) => ({ id: e.id, points: Math.floor(Math.random() * 12) + 1 }))
           .sort(() => Math.random() * 2 - 1),
       },
       {
         name: 'Alice Jonsson 2',
         points: 12,
-        bets: entries
+        bets: filtered
           .map((e) => ({ id: e.id, points: Math.floor(Math.random() * 12) + 1 }))
           .sort(() => Math.random() * 2 - 1),
       },
       {
         name: 'Alice Jonsson 3',
         points: 7,
-        bets: entries
+        bets: filtered
           .map((e) => ({ id: e.id, points: Math.floor(Math.random() * 12) + 1 }))
           .sort(() => Math.random() * 2 - 1),
       },
       {
         name: 'Alice Jonsson 4',
         points: 5,
-        bets: entries
+        bets: filtered
           .map((e) => ({ id: e.id, points: Math.floor(Math.random() * 12) + 1 }))
           .sort(() => Math.random() * 2 - 1),
       },
       {
         name: 'Alice Jonsson 5',
         points: 2,
-        bets: entries
+        bets: filtered
           .map((e) => ({ id: e.id, points: Math.floor(Math.random() * 12) + 1 }))
           .sort(() => Math.random() * 2 - 1),
       },
     ];
     if (createdEntries.length === 0) {
       createResultEntries(
-        entries.sort(
+        filtered.sort(
           (a, b) =>
             mean(users.map((u) => u.bets.findIndex((bet) => bet.id === a.id))) -
             mean(users.map((u) => u.bets.findIndex((bet) => bet.id === b.id))),
@@ -162,7 +163,7 @@ const showResult = () => {
           document.getElementById('bets').classList.remove('hidden');
           if (data.entries.length > 0) areResultsIn = true;
           createResultEntries(
-            data.entries.map((id) => entries.find((e) => e.id === id)),
+            data.entries.map((id) => entries.find((e) => e.id === id && e.active)),
             data.users,
           );
         })

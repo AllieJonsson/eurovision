@@ -11,7 +11,7 @@ const isSubmissionLocked = new Date() > new Date('2026-05-16T21:00:00Z');
 const getItem = () => {
   let accum = 16;
   let index = 0;
-  for (; index < entries.length - 1; index++) {
+  for (; index < myOrder.length - 1; index++) {
     const countryElem = document.getElementById(myOrder[index].country);
     accum += countryElem.clientHeight + 9;
     if (accum >= currentMoveY + countryElem.clientHeight / 2) break;
@@ -35,7 +35,7 @@ const followMouse = (e) => {
   myOrder = index >= myOrder.length ? [...myOrder, elem] : [...myOrder.slice(0, index), elem, ...myOrder.slice(index)];
 
   let accum = 16;
-  for (let i = 0; i < entries.length; i++) {
+  for (let i = 0; i < myOrder.length; i++) {
     const countryElem = document.getElementById(myOrder[i].country);
     if (countryElem.id !== currentDrag.id) {
       countryElem.style.top = `${accum}px`;
@@ -120,13 +120,13 @@ const updatePositionOfElements = () => {
     accum += countryElem.clientHeight + 9;
   }
 };
-const createEntries = (entries) => {
-  myOrder = structuredClone(entries);
+const createEntries = (entriesToCreate) => {
+  myOrder = structuredClone(entriesToCreate);
   blueprint = document.getElementById('blueprint');
   const observer = new MutationObserver(function (mutations) {
     const main = document.getElementById('main');
-    for (let i = entries.length - 1; i >= 0; i--) {
-      const elem = document.getElementById(entries[i].country);
+    for (let i = entriesToCreate.length - 1; i >= 0; i--) {
+      const elem = document.getElementById(entriesToCreate[i].country);
       const rect = elem.getBoundingClientRect();
       elem.style.top = `${elem.offsetTop}px`;
       elem.classList.add('absolute');
@@ -140,7 +140,7 @@ const createEntries = (entries) => {
     characterData: false,
     subtree: true,
   });
-  entries.map(createEntry);
+  entriesToCreate.map(createEntry);
   setTimeout(() => updatePositionOfElements(), 1);
   if (isSubmissionLocked) {
     document.getElementById('submissionLocked').classList.remove('hidden');
@@ -211,7 +211,7 @@ const showBet = () => {
     localStorage.setItem('id', id);
     if (location.href.startsWith('file:///')) {
       if (createdBetEntries.length === 0) {
-        createEntries(entries);
+        createEntries(entries.filter((e) => e.active));
       }
       document.getElementById('main').classList.remove('hidden');
       document.getElementById('username').classList.remove('hidden');
@@ -227,13 +227,13 @@ const showBet = () => {
             document.getElementById('tutorial').classList.remove('hidden');
             document.getElementById('username').textContent = `Hej ${data.user}!`;
             if (data.bet.length === 0) {
-              createEntries(entries);
+              createEntries(entries.filter((e) => e.active));
               fetch('/api/bet', {
                 method: 'POST',
-                body: JSON.stringify({ id, bet: entries.map((m) => m.id) }),
+                body: JSON.stringify({ id, bet: entries.filter((e) => e.active).map((m) => m.id) }),
               });
             } else {
-              const filtered = data.bet.map((id) => entries.find((e) => e.id === id)).filter(Boolean);
+              const filtered = data.bet.map((id) => entries.find((e) => e.id === id && e.active)).filter(Boolean);
               if (filtered.length != data.bet.length) {
                 fetch('/api/bet', {
                   method: 'POST',
