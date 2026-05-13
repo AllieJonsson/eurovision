@@ -85,7 +85,7 @@ const createResultEntries = (entries, users) => {
   if (areResultsIn) {
     entries.map((e, index) => createResultEntry(e, index + 1, users));
   } else {
-    for (let i = 1; i <= 26; i++) {
+    for (let i = 1; i <= 25; i++) {
       createResultEntry(null, i, users);
     }
   }
