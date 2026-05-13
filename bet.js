@@ -254,5 +254,6 @@ const showBet = () => {
         document.getElementById('spinner').classList.add('hidden');
       }
     }
+    updatePositionOfElements();
   }
 };
