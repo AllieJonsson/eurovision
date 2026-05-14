@@ -10,9 +10,8 @@ const createResultEntry = (entry, result, users) => {
   placementClone.firstElementChild.textContent = 'Placering ' + result;
 
   if (areResultsIn) {
-    placementClone.firstElementChild.nextElementSibling.firstElementChild.classList.add(
-      `bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`,
-    );
+    placementClone.firstElementChild.nextElementSibling.firstElementChild.style.backgroundImage =
+      `url(https://flagcdn.com/h60/${entry.code}.png)`;
     placementClone.firstElementChild.nextElementSibling.firstElementChild.nextElementSibling.textContent =
       entry.country;
   } else {
@@ -32,8 +31,8 @@ const createResultEntry = (entry, result, users) => {
     answerClone.classList.remove('hidden');
     answerClone.firstElementChild.textContent = user.name;
     const country = entries.find((e) => e.id === bet.id);
-    answerClone.firstElementChild.nextElementSibling.classList.add(
-      `bg-[url(https://flagcdn.com/h60/${country?.code ?? 'un'}.png)]`,
+    answerClone.firstElementChild.nextElementSibling.style.backgroundImage =
+      `url(https://flagcdn.com/h60/${country?.code ?? 'un'}.png)`,
     );
     answerClone.firstElementChild.nextElementSibling.nextElementSibling.textContent = country?.country ?? '???';
     if (areResultsIn) {
