@@ -32,8 +32,7 @@ const createResultEntry = (entry, result, users) => {
     answerClone.firstElementChild.textContent = user.name;
     const country = entries.find((e) => e.id === bet.id);
     answerClone.firstElementChild.nextElementSibling.style.backgroundImage =
-      `url(https://flagcdn.com/h60/${country?.code ?? 'un'}.png)`,
-    );
+      `url(https://flagcdn.com/h60/${country?.code ?? 'un'}.png)`;
     answerClone.firstElementChild.nextElementSibling.nextElementSibling.textContent = country?.country ?? '???';
     if (areResultsIn) {
       const element =
