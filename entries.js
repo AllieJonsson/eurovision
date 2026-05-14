@@ -66,7 +66,7 @@ const entries = [
     id: 8,
     code: 'lu',
     youtube: 'https://www.youtube.com/watch?v=4WA162bl1Fo',
-    active: true,
+    active: false,
   },
   {
     country: 'Storbritannien',
@@ -102,7 +102,7 @@ const entries = [
     id: 12,
     code: 'am',
     youtube: 'https://www.youtube.com/watch?v=5EXoK-lgocw',
-    active: true,
+    active: false,
   },
   {
     country: 'Serbien',
@@ -129,7 +129,7 @@ const entries = [
     id: 15,
     code: 'ch',
     youtube: 'https://www.youtube.com/watch?v=PfpYGAzW5dM',
-    active: true,
+    active: false,
   },
   {
     country: 'Österrike',
@@ -218,7 +218,7 @@ const entries = [
     id: 25,
     code: 'lv',
     youtube: 'https://www.youtube.com/watch?v=ylj-kHKEFMY',
-    active: true,
+    active: false,
   },
   {
     country: 'Albanien',
@@ -254,7 +254,7 @@ const entries = [
     id: 29,
     code: 'az',
     youtube: 'https://www.youtube.com/watch?v=iMDBPe25JhM',
-    active: true,
+    active: false,
   },
   {
     country: 'Ukraina',
