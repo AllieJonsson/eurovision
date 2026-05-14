@@ -71,9 +71,9 @@ const createEntry = (entry, index) => {
   const clone = blueprint.cloneNode(true);
   createdBetEntries.push(clone);
   clone.firstChild.parentElement.firstElementChild.firstElementChild.firstElementChild.textContent = index + 1;
-  clone.firstChild.parentElement.firstElementChild.firstElementChild.nextElementSibling.firstElementChild.classList.add(
-    `bg-[url(https://flagcdn.com/h60/${entry.code}.png)]`,
-  );
+  clone.firstElementChild.firstElementChild.nextElementSibling.firstElementChild
+    .style.backgroundImage = `url("https://flagcdn.com/h60/${entry.code}.png")`;
+  
   clone.firstChild.parentElement.lastElementChild.previousElementSibling.previousElementSibling.firstElementChild.textContent =
     entry.artist;
   clone.firstChild.parentElement.lastElementChild.previousElementSibling.previousElementSibling.firstElementChild.nextElementSibling.textContent =
