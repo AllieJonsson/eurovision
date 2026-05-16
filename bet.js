@@ -7,7 +7,7 @@ let startIndex = 0;
 let currentInterval = undefined;
 const createdBetEntries = [];
 
-const isSubmissionLocked = new Date() > new Date('2026-05-16T21:00:00Z');
+const isSubmissionLocked = new Date() > new Date('2026-05-16T22:00:00Z');
 const getItem = () => {
   let accum = 16;
   let index = 0;
