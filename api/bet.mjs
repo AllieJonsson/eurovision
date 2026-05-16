@@ -22,7 +22,7 @@ export default async function handler(request) {
   } else if (request.method === 'POST') {
     const data = await request.json();
     console.log(data);
-    if (new Date() > new Date('2026-05-16T21:00:00Z')) {
+    if (new Date() > new Date('2026-05-16T22:00:00Z')) {
       return new Response(JSON.stringify({ error: 'Betting is closed' }), { status: 403 });
     }
     if (!data.id) return new Response(JSON.stringify({ error: 'Missing param: id' }), { status: 400 });
