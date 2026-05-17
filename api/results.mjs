@@ -26,7 +26,7 @@ const scoreMap = {
 export default async function handler(request) {
   const url = new URL(request.url);
   if (request.method === 'GET') {
-    const result = [];
+    const result = [40, 2, 39, 35, 21, 22, 20, 38, 30, 19, 10, 28, 26, 14, 34, 36, 13, 37, 11, 1, 23, 18, 7, 16, 9];
     const betKeys = await redis.keys('bet.*');
     const ids = betKeys.map((k) => k.split('.')[1]);
     const bets = await redis.mget(betKeys);
